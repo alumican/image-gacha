@@ -1,0 +1,967 @@
+
+
+  VITE v5.4.21  ready in 454 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+2:14:47 AM [vite] changed tsconfig file detected: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xi
+2:14:47 AM [vite] changed tsconfig file detected: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/reference-app/gemini-3-pro-image-lab/tsconfig.json - Clearing cache and forcing 
+2:14:47 AM [vite] changed tsconfig file detected: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/reference-app/gemini-3-pro-image-lab/tsconfig.json - Clearing cache and forcing full-reload to ensure TypeScript is compiled with updated config values.
+2:14:47 AM [vite] page reload reference-app/gemini-3-pro-image-lab/index.html
+2:14:47 AM [vite] page reload reference-app/gemini-3-pro-image-lab/index.html (x2)
+2:14:47 AM [vite] changed tscfile detected: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xi
+2:14:47 AM [vite] changed tsconfig file detected: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/reference-app/gemini-3-pro-image-lab/tsconfig.json - Clearing cache and forcing 
+2:14:47 AM [vite] changed tsconfig file detected: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/reference-app/gemini-3-pro-image-lab/tsconfig.json - Clearing cache and forcing full-reload to ensure TypeScript is compiled with updated config values.
+2:17:13 AM [vite] hmr update /src/App.tsx, /src/index.css
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-label" from "src/component
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-label" from "src/components/ui/label.tsx". Does the file exist?
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@google/genai" from "src/services/geminiSe
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@google/genai" from "src/services/geminiService.ts". Does the file exist?
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-slot" from "src/components
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-slot" from "src/components/ui/button.tsx". Does the file exist?
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-select" from "src/componen
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-select" from "src/components/ui/select.tsx". Does the file exist?
+2:17:13 AM [vite] hmr update /src/App.tsx, /src/index.css
+2:17:13 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/services/gemini
+2:17:13 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/services/geminiService.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/ge
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/geminiService.ts:1:28
+  1  |  import { GoogleGenAI } from "@google/genai";
+     |                               ^
+  2  |  export const generateImage = async (prompt, referenceImages, config) => {
+  3  |    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 0)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:17:13 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/compone
+2:17:13 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/components/ui/label.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/label.tsx:2:32
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as LabelPrimitive from "@radix-ui/react-label";
+     |                                   ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:17:13 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/compon
+2:17:13 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/components/ui/select.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/select.tsx:2:33
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as SelectPrimitive from "@radix-ui/react-select";
+     |                                    ^
+  19 |  import { Check, ChevronDown, ChevronUp } from "lucide-react";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:17:13 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/componen
+2:17:13 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/button.tsx:2:21
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import { Slot } from "@radix-ui/react-slot";
+     |                        ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-select" from "src/componen
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-select" from "src/components/ui/select.tsx". Does the file exist?
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-label" from "src/component
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-label" from "src/components/ui/label.tsx". Does the file exist?
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@google/genai" from "src/services/geminiSe
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@google/genai" from "src/services/geminiService.ts". Does the file exist?
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-slot" from "src/components
+2:17:13 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-slot" from "src/components/ui/button.tsx". Does the file exist?
+2:17:13 AM [vite] ✨ new dependencies optimized: lucide-react, class-variance-authority, clsx, tailwind-mer
+2:17:13 AM [vite] ✨ new dependencies optimized: lucide-react, class-variance-authority, clsx, tailwind-merge
+2:17:13 AM [vite] ✨ optimized dependencies changed. reloading
+2:17:14 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/ss/gemini
+2:17:14 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/services/geminiService.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/ge
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/geminiService.ts:1:28
+  1  |  import { GoogleGenAI } from "@google/genai";
+     |                               ^
+  2  |  export const generateImage = async (prompt, referenceImages, config) => {
+  3  |    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 0)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+2:17:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/componen
+2:17:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/button.tsx:2:21
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import { Slot } from "@radix-ui/react-slot";
+     |                        ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+2:17:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/compone
+2:17:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/components/ui/label.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/label.tsx:2:32
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as LabelPrimitive from "@radix-ui/react-label";
+     |                                   ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+2:17:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/compon
+2:17:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/components/ui/select.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/select.tsx:2:33
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as SelectPrimitive from "@radix-ui/react-select";
+     |                                    ^
+  19 |  import { Check, ChevronDown, ChevronUp } from "lucide-react";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+2:17:14 AM [vite] Pre-transform error: Failed to resolve import "@google/genai" from "src/services/geminiSe
+2:17:14 AM [vite] Pre-transform error: Failed to resolve import "@google/genai" from "src/services/geminiService.ts". Does the file exist?
+2:17:14 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-slot" from "src/components
+2:17:14 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-slot" from "src/components/ui/button.tsx". Does the file exist?
+2:17:14 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-label" from "src/component
+2:17:14 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-label" from "src/components/ui/label.tsx". Does the file exist?
+2:17:14 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-select" from "src/componen
+2:17:14 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-select" from "src/components/ui/select.tsx". Does the file exist?
+2:17:26 AM [vite] hmr update /src/index.css, /src/App.tsx
+2:17:26 AM [vite] hmr update /src/components/ui/textarea.tsx, /src/index.css
+2:17:26 AM [vite] hmr update /src/index.css, /src/App.tsx
+2:17:26 AM [vite] page reload src/types.ts
+2:17:26 AM [vite] hmr update /src/components/ui/card.tsx, /src/index.css
+2:17:26 AM [vite] hmr update /src/index.css, /src/App.tsx
+2:17:26 AM [vite] hmr update /src/index.css, /src/App.tsx (x2)
+2:17:26 AM [vite] hmr update /src/App.tsx, /src/index.css
+2:17:27 AM [vite] Pre-transform error: Failed to resolve import "@google/genai" from "src/services/geminiSe
+2:17:27 AM [vite] Pre-transform error: Failed to resolve import "@google/genai" from "src/services/geminiService.ts". Does the file exist?
+2:17:27 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-slot" from "src/components
+2:17:27 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-slot" from "src/components/ui/button.tsx". Does the file exist?
+2:17:27 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-label" from "src/component
+2:17:27 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-label" from "src/components/ui/label.tsx". Does the file exist?
+2:17:27 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-select" from "src/componen
+2:17:27 AM [vite] Pre-transform error: Failed to resolve import "@radix-ui/react-select" from "src/components/ui/select.tsx". Does the file exist?
+2:17:27 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/services/gemini
+2:17:27 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/services/geminiService.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/ge
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/geminiService.ts:1:28
+  1  |  import { GoogleGenAI } from "@google/genai";
+     |                               ^
+  2  |  export const generateImage = async (prompt, referenceImages, config) => {
+  3  |    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 0)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:17:27 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/componen
+2:17:27 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/button.tsx:2:21
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import { Slot } from "@radix-ui/react-slot";
+     |                        ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:17:27 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/compone
+2:17:27 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/components/ui/label.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/label.tsx:2:32
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as LabelPrimitive from "@radix-ui/react-label";
+     |                                   ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:17:27 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/compon
+2:17:27 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/components/ui/select.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/select.tsx:2:33
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as SelectPrimitive from "@radix-ui/react-select";
+     |                                    ^
+  19 |  import { Check, ChevronDown, ChevronUp } from "lucide-react";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:18:45 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/services/gemini
+2:18:45 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/services/geminiService.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/ge
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/geminiService.ts:1:28
+  1  |  import { GoogleGenAI } from "@google/genai";
+     |                               ^
+  2  |  export const generateImage = async (prompt, referenceImages, config) => {
+  3  |    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 0)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:18:45 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/componen
+2:18:45 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/button.tsx:2:21
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import { Slot } from "@radix-ui/react-slot";
+     |                        ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:18:45 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/compone
+2:18:45 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/components/ui/label.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/label.tsx:2:32
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as LabelPrimitive from "@radix-ui/react-label";
+     |                                   ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:18:45 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/compon
+2:18:45 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/components/ui/select.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/select.tsx:2:33
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as SelectPrimitive from "@radix-ui/react-select";
+     |                                    ^
+  19 |  import { Check, ChevronDown, ChevronUp } from "lucide-react";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:12 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/services/gemini
+2:28:12 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/services/geminiService.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/ge
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/geminiService.ts:1:28
+  1  |  import { GoogleGenAI } from "@google/genai";
+     |                               ^
+  2  |  export const generateImage = async (prompt, referenceImages, config) => {
+  3  |    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 0)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:12 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/componen
+2:28:12 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/button.tsx:2:21
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import { Slot } from "@radix-ui/react-slot";
+     |                        ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:12 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/compone
+2:28:12 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/components/ui/label.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/label.tsx:2:32
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as LabelPrimitive from "@radix-ui/react-label";
+     |                                   ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:12 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/compon
+2:28:12 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/components/ui/select.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/select.tsx:2:33
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as SelectPrimitive from "@radix-ui/react-select";
+     |                                    ^
+  19 |  import { Check, ChevronDown, ChevronUp } from "lucide-react";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/services/gemini
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/services/geminiService.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/ge
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/geminiService.ts:1:28
+  1  |  import { GoogleGenAI } from "@google/genai";
+     |                               ^
+  2  |  export const generateImage = async (prompt, referenceImages, config) => {
+  3  |    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 0)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/componen
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/button.tsx:2:21
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import { Slot } from "@radix-ui/react-slot";
+     |                        ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/compone
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/components/ui/label.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/label.tsx:2:32
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as LabelPrimitive from "@radix-ui/react-label";
+     |                                   ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/compon
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/components/ui/select.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/select.tsx:2:33
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as SelectPrimitive from "@radix-ui/react-select";
+     |                                    ^
+  19 |  import { Check, ChevronDown, ChevronUp } from "lucide-react";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/services/gemini
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/services/geminiService.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/ge
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/geminiService.ts:1:28
+  1  |  import { GoogleGenAI } from "@google/genai";
+     |                               ^
+  2  |  export const generateImage = async (prompt, referenceImages, config) => {
+  3  |    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 0)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/componen
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/button.tsx:2:21
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import { Slot } from "@radix-ui/react-slot";
+     |                        ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/compone
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/components/ui/label.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/label.tsx:2:32
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as LabelPrimitive from "@radix-ui/react-label";
+     |                                   ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/compon
+2:28:14 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/components/ui/select.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/select.tsx:2:33
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as SelectPrimitive from "@radix-ui/react-select";
+     |                                    ^
+  19 |  import { Check, ChevronDown, ChevronUp } from "lucide-react";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:15 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/services/gemini
+2:28:15 AM [vite] Internal server error: Failed to resolve import "@google/genai" from "src/services/geminiService.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/ge
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/services/geminiService.ts:1:28
+  1  |  import { GoogleGenAI } from "@google/genai";
+     |                               ^
+  2  |  export const generateImage = async (prompt, referenceImages, config) => {
+  3  |    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 0)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:15 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/componen
+2:28:15 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-slot" from "src/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/button.tsx:2:21
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import { Slot } from "@radix-ui/react-slot";
+     |                        ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:15 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/compone
+2:28:15 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-label" from "src/components/ui/label.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/label.tsx:2:32
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as LabelPrimitive from "@radix-ui/react-label";
+     |                                   ^
+  19 |  import { cva } from "class-variance-authority";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+2:28:15 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/compon
+2:28:15 AM [vite] Internal server error: Failed to resolve import "@radix-ui/react-select" from "src/components/ui/select.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/
+  File: /Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/src/components/ui/select.tsx:2:33
+  16 |  }
+  17 |  import * as React from "react";
+  18 |  import * as SelectPrimitive from "@radix-ui/react-select";
+     |                                    ^
+  19 |  import { Check, ChevronDown, ChevronUp } from "lucide-react";
+  20 |  import { cn } from "@/lib/utils";
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project
+      at TransformPluginContext._formatError (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobi
+      at TransformPluginContext.error (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gac
+      at normalizeUrl (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/n
+      at async file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/proj
+      at async TransformPluginContext.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xin
+      at async PluginContainer.transform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app
+      at async loadAndTransform (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinob
+      at async viteTransformMiddleware (file:///Users/yukiya/Dropbox/Private/work/shouwakiden/project/xinobiai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+^Ciai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)iai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)^Ciai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)iai/app/image_gacha/app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)^Ciai/app/image_gacha/app/node_modules/vite/[
+
+
