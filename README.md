@@ -72,17 +72,21 @@ This might generate: "A cat bird in a forest" (randomly selected).
    npm run setup
    ```
    
-   This will prompt you to enter your Gemini API key and API server URL.
+   This will prompt you to enter your Gemini API key.
 
 4. **Start the application**
    ```bash
    # Client and server together
    npm run dev:all
+   ```
    
+   ```bash
    # Or separately:
    npm run dev          # Client only (port 5173)
    npm run dev:server   # Server only (port 3001)
    ```
+   
+   To change the API server URL or frontend URL, edit `.env.local`.
 
 5. **Open your browser**
    

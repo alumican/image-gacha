@@ -58,37 +58,23 @@ VITE_FRONTEND_URL=http://localhost:5173
   // Get API key
   const apiKey = await question('Gemini API Key (required): ');
   if (!apiKey.trim()) {
-    console.error('\n❌ API key is required. Setup cancelled.');
+    console.error('\nAPI key is required. Setup cancelled.');
     rl.close();
     process.exit(1);
   }
   
-  // Get API URL (optional, with default)
-  const apiUrl = await question('API Server URL (default: http://localhost:3001): ');
-  const finalApiUrl = apiUrl.trim() || 'http://localhost:3001';
-  
-  // Get Frontend URL (optional, with default)
-  const frontendUrl = await question('Frontend URL (default: http://localhost:5173): ');
-  const finalFrontendUrl = frontendUrl.trim() || 'http://localhost:5173';
-  
-  // Replace values in envContent
+  // Replace API key in envContent (URLs use defaults)
   envContent = envContent.replace(
     /VITE_GEMINI_API_KEY=.*/,
     `VITE_GEMINI_API_KEY=${apiKey.trim()}`
   );
-  envContent = envContent.replace(
-    /VITE_API_URL=.*/,
-    `VITE_API_URL=${finalApiUrl}`
-  );
   
-  // Add or replace VITE_FRONTEND_URL
-  if (envContent.includes('VITE_FRONTEND_URL=')) {
-    envContent = envContent.replace(
-      /VITE_FRONTEND_URL=.*/,
-      `VITE_FRONTEND_URL=${finalFrontendUrl}`
-    );
-  } else {
-    envContent += `\n# Frontend URL\nVITE_FRONTEND_URL=${finalFrontendUrl}\n`;
+  // Ensure URLs are set to defaults if not present
+  if (!envContent.includes('VITE_API_URL=')) {
+    envContent += '\n# API Server URL (default: http://localhost:3001)\nVITE_API_URL=http://localhost:3001\n';
+  }
+  if (!envContent.includes('VITE_FRONTEND_URL=')) {
+    envContent += '\n# Frontend URL (default: http://localhost:5173)\nVITE_FRONTEND_URL=http://localhost:5173\n';
   }
   
   // Write .env.local
@@ -96,9 +82,10 @@ VITE_FRONTEND_URL=http://localhost:5173
   
   console.log('\nSetup complete!');
   console.log(`   Created ${envLocalPath}`);
+  console.log('\nNote: To change API server URL or frontend URL, edit .env.local');
   console.log('\nNext steps:');
   console.log('   1. Run "npm run dev:all" to start the application');
-  console.log(`   2. Open ${finalFrontendUrl} in your browser\n`);
+  console.log('   2. Open http://localhost:5173 in your browser\n');
   
   rl.close();
 }
