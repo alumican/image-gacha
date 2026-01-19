@@ -1,17 +1,11 @@
 import { GoogleGenAI } from "@google/genai";
 import { AspectRatio, ImageSize, ReferenceImage, Style } from "../types";
 import { convertImageToBase64 } from "../lib/imageUtils";
-import { getGeminiApiKey } from "../utils/localStorage";
 
 /**
- * Get API key from localStorage or environment variable
+ * Get API key from environment variable
  */
 const getApiKey = (): string | null => {
-  const storedKey = getGeminiApiKey();
-  if (storedKey) {
-    return storedKey;
-  }
-  
   return import.meta.env.VITE_GEMINI_API_KEY || null;
 };
 

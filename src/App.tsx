@@ -7,7 +7,7 @@ import { parseGachaPrompt, previewGachaPrompt } from './lib/gachaParser';
 import { convertImageToFile, convertImageToBlob, getApiUrl } from './lib/imageUtils';
 import { AspectRatio, ImageSize, ReferenceImage, GeneratedImage, Style } from './types';
 import { Timer } from './utils/timer';
-import { getGeminiApiKey, setGeminiApiKey, getCurrentProjectId, setCurrentProjectId as saveCurrentProjectId } from './utils/localStorage';
+import { getCurrentProjectId, setCurrentProjectId as saveCurrentProjectId } from './utils/localStorage';
 import { Button } from './components/ui/button';
 import { Textarea } from './components/ui/textarea';
 import { Card, CardContent } from './components/ui/card';
@@ -23,7 +23,7 @@ import { ModalSection } from './components/ModalSection';
 import { BookmarkButton } from './components/BookmarkButton';
 import { Toaster } from './components/ui/toaster';
 import { useToast } from './components/ui/use-toast';
-import { X, Upload, Download, Loader2, Key, Pencil, Grid3x3, List, Search, Copy, Plus, RotateCcw, Bookmark, BookmarkCheck } from 'lucide-react';
+import { X, Upload, Download, Loader2, Pencil, Grid3x3, List, Search, Copy, Plus, RotateCcw, Bookmark, BookmarkCheck } from 'lucide-react';
 
 const ThumbnailImage: React.FC<{
   initialUrl: string;
@@ -70,9 +70,6 @@ function App() {
   const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
   const timerRef = useRef<Timer | null>(null);
   const elapsedIntervalRef = useRef<number | null>(null);
-  const [apiKey, setApiKey] = useState<string>('');
-  const [isApiKeyDialogOpen, setIsApiKeyDialogOpen] = useState<boolean>(false);
-  const [hasApiKey, setHasApiKey] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<GeneratedImage | null>(null);
   const [selectedThumbnailImage, setSelectedThumbnailImage] = useState<string | null>(null);
   const [promptPreview, setPromptPreview] = useState<string>('');
@@ -142,35 +139,14 @@ function App() {
 
   // Check for API key on mount
   useEffect(() => {
-    const storedKey = getGeminiApiKey();
     const envKey = import.meta.env.VITE_GEMINI_API_KEY;
-    
-    if (storedKey || envKey) {
-      setHasApiKey(true);
-      if (storedKey) {
-        setApiKey(storedKey);
-      }
-    } else {
-      setIsApiKeyDialogOpen(true);
+    if (!envKey) {
+      toast({
+        variant: "destructive",
+        title: "API Key Not Found",
+        description: "Please run 'npm run setup' to configure your API key.",
+      });
     }
-  }, []);
-
-
-  // Check for AI Studio integration
-  useEffect(() => {
-    const checkAistudio = async () => {
-      if ((window as any).aistudio) {
-        try {
-          const selected = await (window as any).aistudio.hasSelectedApiKey();
-          if (selected) {
-            setHasApiKey(true);
-          }
-        } catch (e) {
-          // Ignore errors
-        }
-      }
-    };
-    checkAistudio();
   }, []);
 
   useEffect(() => {
@@ -434,33 +410,6 @@ function App() {
     setStyleImages((prev) => prev.filter((img) => img.id !== id));
   };
 
-  const handleSaveApiKey = () => {
-    if (!apiKey.trim()) {
-      toast({
-        variant: "destructive",
-        description: "Please enter an API key.",
-      });
-      return;
-    }
-    setGeminiApiKey(apiKey);
-    setHasApiKey(true);
-    setIsApiKeyDialogOpen(false);
-  };
-
-  const handleSelectAistudioKey = async () => {
-    if ((window as any).aistudio) {
-      try {
-        await (window as any).aistudio.openSelectKey();
-        setHasApiKey(true);
-        setIsApiKeyDialogOpen(false);
-      } catch (e) {
-        toast({
-          variant: "destructive",
-          description: "Failed to select API key.",
-        });
-      }
-    }
-  };
 
 
   const handleSaveSettings = async (): Promise<boolean> => {
@@ -503,11 +452,6 @@ function App() {
         variant: "destructive",
         description: "Please enter a prompt.",
       });
-      return;
-    }
-
-    if (!hasApiKey) {
-      setIsApiKeyDialogOpen(true);
       return;
     }
 
@@ -679,10 +623,9 @@ function App() {
       if (err.message === "API_KEY_EXPIRED" || err.message === "API_KEY_REQUIRED") {
         toast({
           variant: "destructive",
-          description: "API key is not set. Please set it.",
+          title: "API Key Error",
+          description: "API key is not set or expired. Please run 'npm run setup' to configure your API key.",
         });
-        setHasApiKey(false);
-        setIsApiKeyDialogOpen(true);
       } else {
         toast({
           variant: "destructive",
@@ -968,23 +911,6 @@ function App() {
                   Billing Documentation
                 </a>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  const storedKey = getGeminiApiKey();
-                  if (storedKey) {
-                    setApiKey(storedKey);
-                  } else {
-                    setApiKey('');
-                  }
-                  setIsApiKeyDialogOpen(true);
-                }}
-                className="text-xs"
-              >
-                <Key className="mr-2 h-3 w-3" />
-                API Key
-              </Button>
             </div>
           </div>
         </header>
@@ -1461,68 +1387,6 @@ function App() {
           <span>© {new Date().getFullYear()} Yukiya Okuda</span>
         </footer>
       </div>
-
-      {/* API Key Dialog */}
-      <Dialog open={isApiKeyDialogOpen} onOpenChange={setIsApiKeyDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>API Key Settings</DialogTitle>
-            <DialogDescription>
-              Enter your Gemini API key. The API key will be saved in your browser's local storage.
-              <br />
-              <a
-                href="https://aistudio.google.com/apikey"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline mt-2 inline-block"
-              >
-                Get API Key →
-              </a>
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="api-key">API Key</Label>
-              <Input
-                id="api-key"
-                type="password"
-                placeholder="AIza..."
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSaveApiKey();
-                  }
-                }}
-              />
-            </div>
-            {(window as any).aistudio && (
-              <div className="flex items-center gap-2">
-                <div className="flex-1 border-t" />
-                <span className="text-xs text-muted-foreground">or</span>
-                <div className="flex-1 border-t" />
-              </div>
-            )}
-            {(window as any).aistudio && (
-              <Button
-                variant="outline"
-                onClick={handleSelectAistudioKey}
-                className="w-full"
-              >
-                Select from AI Studio
-              </Button>
-            )}
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsApiKeyDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleSaveApiKey} disabled={!apiKey.trim()}>
-              Save
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       {/* Image Preview Dialog */}
       <Dialog open={selectedImage !== null} onOpenChange={(open) => !open && setSelectedImage(null)}>

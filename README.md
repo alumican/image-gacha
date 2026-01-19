@@ -59,7 +59,6 @@ This might generate: "A cat bird in a forest" (randomly selected).
    ```bash
    # Client
    npm install
-   
    # Server
    cd server
    npm install
@@ -68,13 +67,12 @@ This might generate: "A cat bird in a forest" (randomly selected).
 
 3. **Configure API key**
    
-   Create `.env.local` in the root directory:
+   Run the setup script to interactively create `.env.local`:
    ```bash
-   VITE_GEMINI_API_KEY=your_api_key_here
-   VITE_API_URL=http://localhost:3001
+   npm run setup
    ```
    
-   Alternatively, enter your API key in the app's dialog on first launch.
+   This will prompt you to enter your Gemini API key and API server URL.
 
 4. **Start the application**
    ```bash

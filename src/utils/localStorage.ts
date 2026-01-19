@@ -45,32 +45,8 @@ export const removeStorageItem = (key: string): void => {
  * Storage keys
  */
 export const STORAGE_KEYS = {
-  GEMINI_API_KEY: 'gemini_api_key',
   CURRENT_PROJECT_ID: 'current_project_id',
 } as const;
-
-/**
- * Get Gemini API key from localStorage
- * @returns API key or null if not found
- */
-export const getGeminiApiKey = (): string | null => {
-  return getStorageItem(STORAGE_KEYS.GEMINI_API_KEY);
-};
-
-/**
- * Set Gemini API key in localStorage
- * @param apiKey - API key to store
- */
-export const setGeminiApiKey = (apiKey: string): void => {
-  setStorageItem(STORAGE_KEYS.GEMINI_API_KEY, apiKey.trim());
-};
-
-/**
- * Remove Gemini API key from localStorage
- */
-export const removeGeminiApiKey = (): void => {
-  removeStorageItem(STORAGE_KEYS.GEMINI_API_KEY);
-};
 
 /**
  * Get current project ID from localStorage
