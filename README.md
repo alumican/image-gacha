@@ -51,7 +51,7 @@ This might generate: "A cat bird in a forest" (randomly selected).
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone git@github.com:alumican/image-gacha.git
    cd image-gacha/app
    ```
 
