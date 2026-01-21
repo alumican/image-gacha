@@ -177,6 +177,99 @@ app.post('/api/upload', upload.fields([
 });
 
 /**
+ * Create metadata JSON file for an image (before image generation)
+ * POST /api/projects/:projectId/images/:imageId/metadata
+ * Body: { metadata: object }
+ */
+app.post('/api/projects/:projectId/images/:imageId/metadata', async (req, res) => {
+  try {
+    const { projectId, imageId } = req.params;
+    const { metadata } = req.body;
+    
+    if (!metadata || typeof metadata !== 'object') {
+      return res.status(400).json({ error: 'Metadata object is required' });
+    }
+    
+    const projectDir = path.join(projectsDir, projectId);
+    const generatedImagesDir = path.join(projectDir, 'outputs', 'generated-images');
+    await fs.mkdir(generatedImagesDir, { recursive: true });
+    
+    const jsonPath = path.join(generatedImagesDir, `${imageId}.json`);
+    
+    // Write metadata JSON file
+    await fs.writeFile(jsonPath, JSON.stringify(metadata, null, 2));
+    
+    res.json({
+      success: true,
+      message: 'Metadata created successfully',
+      imageId,
+    });
+  } catch (error: any) {
+    console.error('Create metadata error:', error);
+    res.status(500).json({ error: error.message || 'Internal server error' });
+  }
+});
+
+/**
+ * Update image and metadata (after image generation)
+ * PUT /api/projects/:projectId/images/:imageId
+ * Body: FormData with 'image' (file) and optional 'metadata' (JSON string)
+ */
+app.put('/api/projects/:projectId/images/:imageId', upload.single('image'), async (req, res) => {
+  try {
+    const { projectId, imageId } = req.params;
+    
+    if (!req.file) {
+      return res.status(400).json({ error: 'Image file is required' });
+    }
+    
+    const projectDir = path.join(projectsDir, projectId);
+    const generatedImagesDir = path.join(projectDir, 'outputs', 'generated-images');
+    await fs.mkdir(generatedImagesDir, { recursive: true });
+    
+    const imageExt = path.extname(req.file.filename);
+    const imagePath = path.join(generatedImagesDir, `${imageId}${imageExt}`);
+    const jsonPath = path.join(generatedImagesDir, `${imageId}.json`);
+    
+    // Move uploaded image file
+    await fs.rename(req.file.path, imagePath);
+    
+    // Update metadata if provided
+    if (req.body.metadata) {
+      let metadata;
+      try {
+        metadata = JSON.parse(req.body.metadata);
+      } catch {
+        return res.status(400).json({ error: 'Invalid metadata JSON' });
+      }
+      
+      // Read existing metadata if it exists, otherwise use provided metadata
+      let existingMetadata = metadata;
+      try {
+        const existingContent = await fs.readFile(jsonPath, 'utf-8');
+        existingMetadata = JSON.parse(existingContent);
+        // Merge with provided metadata (provided metadata takes precedence)
+        existingMetadata = { ...existingMetadata, ...metadata };
+      } catch {
+        // JSON file doesn't exist, use provided metadata
+      }
+      
+      await fs.writeFile(jsonPath, JSON.stringify(existingMetadata, null, 2));
+    }
+    
+    res.json({
+      success: true,
+      message: 'Image and metadata updated successfully',
+      imageId,
+      imageUrl: `/uploads/projects/${projectId}/outputs/generated-images/${imageId}${imageExt}`,
+    });
+  } catch (error: any) {
+    console.error('Update image error:', error);
+    res.status(500).json({ error: error.message || 'Internal server error' });
+  }
+});
+
+/**
  * Get list of uploaded files for a project (latest first)
  * GET /api/files?projectId=default
  */
@@ -194,12 +287,11 @@ app.get('/api/files', async (req, res) => {
     }
     
     const files = await fs.readdir(generatedImagesDir);
-    const imageFiles = files.filter(f => /\.(png|jpg|jpeg|webp)$/i.test(f));
+    const jsonFiles = files.filter(f => /\.json$/i.test(f));
     
     const fileList = await Promise.all(
-      imageFiles.map(async (imageFile) => {
-        const baseName = path.parse(imageFile).name;
-        const jsonFile = `${baseName}.json`;
+      jsonFiles.map(async (jsonFile) => {
+        const baseName = path.parse(jsonFile).name;
         const jsonPath = path.join(generatedImagesDir, jsonFile);
         
         let metadata = null;
@@ -207,12 +299,34 @@ app.get('/api/files', async (req, res) => {
           const metadataContent = await fs.readFile(jsonPath, 'utf-8');
           metadata = JSON.parse(metadataContent);
         } catch {
-          // JSON file doesn't exist, skip
+          // JSON file doesn't exist or invalid, skip
+          return null;
         }
 
         // Extract image ID from filename
         const imageId = baseName;
-        const imageUrl = `/uploads/projects/${projectId}/outputs/generated-images/${imageFile}`;
+        
+        // Check if image file exists
+        const imageExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
+        let imageUrl = '';
+        let imageExists = false;
+        
+        for (const ext of imageExtensions) {
+          const imagePath = path.join(generatedImagesDir, `${imageId}${ext}`);
+          try {
+            await fs.access(imagePath);
+            imageUrl = `/uploads/projects/${projectId}/outputs/generated-images/${imageId}${ext}`;
+            imageExists = true;
+            break;
+          } catch {
+            // Image file doesn't exist with this extension, try next
+          }
+        }
+        
+        // If no image file exists, use placeholder
+        if (!imageExists) {
+          imageUrl = ''; // Empty string indicates image is not yet generated
+        }
         
         // Extract timestamp from metadata or filename
         let timestamp = 0;
@@ -223,6 +337,8 @@ app.get('/api/files', async (req, res) => {
           const timestampMatch = imageId.match(/^(\d+)/);
           if (timestampMatch) {
             timestamp = parseInt(timestampMatch[1], 10);
+          } else {
+            timestamp = Date.now(); // Fallback to current time
           }
         }
 
@@ -231,7 +347,7 @@ app.get('/api/files', async (req, res) => {
 
         // Ensure bookmarked field exists (default to false if not present)
         if (!metadata) {
-          throw new Error(`Metadata missing for image ${imageId}`);
+          return null;
         }
         
         if (metadata.bookmarked === undefined) {
@@ -244,14 +360,35 @@ app.get('/api/files', async (req, res) => {
           prompt: promptText,
           timestamp,
           metadata: metadata,
+          isGenerating: !imageExists, // Indicate if image is still being generated
         };
       })
     );
+    
+    // Filter out null entries
+    const validFileList = fileList.filter((item): item is NonNullable<typeof item> => item !== null);
 
-    // Sort by timestamp (newest first)
-    fileList.sort((a, b) => b.timestamp - a.timestamp);
+    // Sort by timestamp (newest first), then by batch index (larger index first) for same timestamp
+    validFileList.sort((a, b) => {
+      if (b.timestamp !== a.timestamp) {
+        return b.timestamp - a.timestamp;
+      }
+      // If timestamps are equal, extract batch index (i) from image ID and sort descending
+      // Image ID format: ${timestamp}-${i}-${random}
+      const extractBatchIndex = (id: string): number => {
+        const parts = id.split('-');
+        if (parts.length >= 2) {
+          const index = parseInt(parts[1], 10);
+          return isNaN(index) ? 0 : index;
+        }
+        return 0;
+      };
+      const indexA = extractBatchIndex(a.id);
+      const indexB = extractBatchIndex(b.id);
+      return indexB - indexA; // Descending order (larger index first)
+    });
 
-    res.json({ files: fileList });
+    res.json({ files: validFileList });
   } catch (error: any) {
     console.error('List files error:', error);
     res.status(500).json({ error: error.message || 'Internal server error' });

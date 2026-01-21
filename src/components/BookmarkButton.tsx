@@ -9,6 +9,7 @@ interface BookmarkButtonProps {
   size?: 'default' | 'sm' | 'lg' | 'icon';
   variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
   className?: string;
+  disabled?: boolean;
 }
 
 /**
@@ -21,6 +22,7 @@ export const BookmarkButton: React.FC<BookmarkButtonProps> = ({
   size = 'icon',
   variant = 'outline',
   className = '',
+  disabled = false,
 }) => {
   const isBookmarked = image.metadata.bookmarked;
 
@@ -30,10 +32,13 @@ export const BookmarkButton: React.FC<BookmarkButtonProps> = ({
       size={size}
       onClick={(e) => {
         e.stopPropagation();
-        onToggle(image.id);
+        if (!disabled) {
+          onToggle(image.id);
+        }
       }}
       title={isBookmarked ? "Remove bookmark" : "Add bookmark"}
       className={className}
+      disabled={disabled}
     >
       {isBookmarked ? (
         <BookmarkCheck className="h-4 w-4 fill-current" />

@@ -19,6 +19,7 @@ export interface GeneratedImage {
   prompt: string;
   timestamp: number;
   generationTime?: number; // Generation time in milliseconds
+  isGenerating?: boolean; // Whether image is still being generated
   metadata: {
     request: {
       prompt: {

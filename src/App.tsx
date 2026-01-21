@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { generateImage } from './services/geminiService';
-import { uploadToServer } from './services/uploadService';
+import { uploadToServer, createMetadataOnServer, updateImageOnServer } from './services/uploadService';
 import { fetchGeneratedImages } from './services/fetchService';
 import { getProjects, createProject, getProjectSettings, saveProjectSettings, uploadReferenceImageForSettings, uploadReferenceImageForOutputs, deleteReferenceImageFromSettings, Project } from './services/projectService';
 import { parseGachaPrompt, previewGachaPrompt } from './lib/gachaParser';
@@ -63,13 +63,13 @@ function App() {
   const [aspectRatio, setAspectRatio] = useState<AspectRatio>('auto');
   const [imageSize, setImageSize] = useState<ImageSize>('auto');
   const [batchCount, setBatchCount] = useState<string>('1');
-  const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const [currentBatchIndex, setCurrentBatchIndex] = useState<number>(0);
-  const [batchSize, setBatchSize] = useState<number>(1);
   const [history, setHistory] = useState<GeneratedImage[]>([]);
   const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
   const timerRef = useRef<Timer | null>(null);
   const elapsedIntervalRef = useRef<number | null>(null);
+  const generatingImagesRef = useRef<Set<string>>(new Set());
+  const generatingTimersRef = useRef<Map<string, Timer>>(new Map());
+  const [generatingElapsedTimes, setGeneratingElapsedTimes] = useState<Map<string, number>>(new Map());
   const [selectedImage, setSelectedImage] = useState<GeneratedImage | null>(null);
   const [selectedThumbnailImage, setSelectedThumbnailImage] = useState<string | null>(null);
   const [promptPreview, setPromptPreview] = useState<string>('');
@@ -263,6 +263,203 @@ function App() {
       setPromptPreview('');
     }
   }, [promptText]);
+
+  // Update viewingImage when history is updated (e.g., when generation completes)
+  useEffect(() => {
+    if (viewingImage) {
+      const updatedImage = history.find(img => img.id === viewingImage.id);
+      if (updatedImage) {
+        // Check if there are actual changes (e.g., response metadata was added, URL was set)
+        const hasChanges = 
+          updatedImage.url !== viewingImage.url ||
+          updatedImage.isGenerating !== viewingImage.isGenerating ||
+          JSON.stringify(updatedImage.metadata?.response) !== JSON.stringify(viewingImage.metadata?.response) ||
+          updatedImage.generationTime !== viewingImage.generationTime;
+        
+        if (hasChanges) {
+          setViewingImage(updatedImage);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [history]);
+
+  // Track elapsed time for generating images
+  useEffect(() => {
+    const generatingImages = history.filter(img => img.isGenerating);
+    
+    // Start timers for new generating images
+    generatingImages.forEach(img => {
+      if (!generatingTimersRef.current.has(img.id)) {
+        const timer = new Timer();
+        timer.start();
+        generatingTimersRef.current.set(img.id, timer);
+      }
+    });
+    
+    // Stop timers for completed images
+    const completedImageIds: string[] = [];
+    generatingTimersRef.current.forEach((timer, imageId) => {
+      const image = history.find(img => img.id === imageId);
+      if (!image || !image.isGenerating) {
+        timer.stop();
+        completedImageIds.push(imageId);
+      }
+    });
+    
+    // Clean up completed timers
+    completedImageIds.forEach(id => {
+      generatingTimersRef.current.delete(id);
+      setGeneratingElapsedTimes(prev => {
+        const next = new Map(prev);
+        next.delete(id);
+        return next;
+      });
+    });
+    
+    // Update elapsed times every second
+    const interval = setInterval(() => {
+      const elapsedTimes = new Map<string, number>();
+      generatingTimersRef.current.forEach((timer, imageId) => {
+        const elapsedSeconds = timer.getElapsedSeconds();
+        elapsedTimes.set(imageId, elapsedSeconds);
+      });
+      
+      if (elapsedTimes.size > 0) {
+        setGeneratingElapsedTimes(elapsedTimes);
+      }
+    }, 1000);
+    
+    return () => {
+      clearInterval(interval);
+    };
+  }, [history]);
+
+  // Handle image generation for cards with isGenerating=true
+  useEffect(() => {
+    const generateImagesForCards = async () => {
+      const generatingImages = history.filter(img => img.isGenerating && !generatingImagesRef.current.has(img.id));
+      
+      for (const image of generatingImages) {
+        generatingImagesRef.current.add(image.id);
+        
+        // Start generation in background
+        (async () => {
+          try {
+            const imageTimer = new Timer();
+            imageTimer.start();
+            
+            const metadata = image.metadata;
+            const request = metadata.request;
+            const processedPrompt = request.prompt.text;
+            const aspectRatio = request.generationConfig?.aspectRatio || 'auto';
+            const imageSize = request.generationConfig?.imageSize || 'auto';
+            
+            // Reconstruct style from metadata
+            const style: Style | undefined = request.style
+              ? {
+                  text: request.style.text,
+                  images: request.style.images?.map((filename: string) => {
+                    // Find image in styleImages or promptImages by filename
+                    const found = [...styleImages, ...promptImages].find(img => img.filename === filename);
+                    return found || {
+                      id: Math.random().toString(36).substr(2, 9),
+                      data: '',
+                      mimeType: 'image/png',
+                      filename,
+                    };
+                  }).filter((img: ReferenceImage) => img.data !== ''),
+                }
+              : undefined;
+            
+            // Reconstruct promptImages from metadata
+            const promptImagesForGeneration: ReferenceImage[] = request.prompt.images?.map((filename: string) => {
+              const found = [...promptImages, ...refImages].find(img => img.filename === filename);
+              return found || {
+                id: Math.random().toString(36).substr(2, 9),
+                data: '',
+                mimeType: 'image/png',
+                filename,
+              };
+            }).filter((img: ReferenceImage) => img.data !== '') || [];
+            
+            const result = await generateImage(
+              processedPrompt,
+              { aspectRatio: aspectRatio as AspectRatio, imageSize: imageSize as ImageSize },
+              style,
+              promptImagesForGeneration.length > 0 ? promptImagesForGeneration : undefined
+            );
+            const generationTime = imageTimer.stop();
+            
+            // Update metadata with response
+            const updatedMetadata = {
+              ...metadata,
+              response: {
+                modelVersion: result.modelVersion,
+                responseId: result.responseId,
+                usageMetadata: result.usageMetadata,
+              },
+              generationTime,
+            };
+            
+            // Update image on server
+            const updateResult = await updateImageOnServer(image.id, result.imageUrl, updatedMetadata, currentProjectId);
+            
+            if (updateResult.success) {
+              // Convert relative URL to absolute URL if needed
+              let finalImageUrl = updateResult.imageUrl || result.imageUrl;
+              if (finalImageUrl && !finalImageUrl.startsWith('http') && !finalImageUrl.startsWith('data:')) {
+                const apiUrl = getApiUrl();
+                finalImageUrl = `${apiUrl}${finalImageUrl.startsWith('/') ? finalImageUrl : `/${finalImageUrl}`}`;
+              }
+              
+              // Update local state while preserving order
+              setHistory((prev) => prev.map((img) => 
+                img.id === image.id
+                  ? {
+                      ...img,
+                      url: finalImageUrl,
+                      isGenerating: false,
+                      generationTime,
+                      metadata: updatedMetadata,
+                    }
+                  : img
+              ));
+            }
+          } catch (error: any) {
+            console.error('Failed to generate image:', error);
+            // Update image to show error state
+            setHistory((prev) => prev.map((img) => 
+              img.id === image.id
+                ? {
+                    ...img,
+                    isGenerating: false,
+                    url: '', // Keep empty URL to indicate error
+                  }
+                : img
+            ));
+            
+            if (error.message === "API_KEY_EXPIRED" || error.message === "API_KEY_REQUIRED") {
+              toast({
+                variant: "destructive",
+                title: "API Key Error",
+                description: "API key is not set or expired. Please run 'npm run setup' to configure your API key.",
+              });
+            } else {
+              toast({
+                variant: "destructive",
+                description: `Failed to generate image ${image.id}: ${error.message || "An unexpected error occurred."}`,
+              });
+            }
+          } finally {
+            generatingImagesRef.current.delete(image.id);
+          }
+        })();
+      }
+    };
+    
+    generateImagesForCards();
+  }, [history, currentProjectId, styleImages, promptImages, refImages, toast]);
 
   const processFiles = async (files: FileList | File[], target: 'prompt' | 'reference' | 'style' = 'reference') => {
     for (const file of Array.from(files) as File[]) {
@@ -460,10 +657,6 @@ function App() {
     const count = parseInt(batchCount.trim() || '1', 10);
     const totalBatchSize = isNaN(count) || count < 1 ? 1 : count;
 
-    setIsGenerating(true);
-    setBatchSize(totalBatchSize);
-    setCurrentBatchIndex(0);
-
     try {
       const promptImageFilenames: string[] = [];
       const styleImageFilenames: string[] = [];
@@ -519,36 +712,21 @@ function App() {
         }
       }
 
-      const batchTimer = new Timer();
-      batchTimer.start();
-      timerRef.current = batchTimer;
-      
-      elapsedIntervalRef.current = window.setInterval(() => {
-        if (timerRef.current) {
-          setElapsedSeconds(timerRef.current.getElapsedSeconds());
-        }
-      }, 1000);
+      const processedPrompt = parseGachaPrompt(promptText);
+      const style: Style | undefined = 
+        (styleText.trim() || styleImages.length > 0)
+          ? {
+              text: styleText.trim() || undefined,
+              images: styleImages.length > 0 ? styleImages : undefined,
+            }
+          : undefined;
 
+      // Create image cards with metadata only (before generation)
+      const baseTimestamp = Date.now();
+      const newImages: GeneratedImage[] = [];
       for (let i = 0; i < totalBatchSize; i++) {
-        setCurrentBatchIndex(i + 1);
-        
-        const imageTimer = new Timer();
-        imageTimer.start();
-        
-        const processedPrompt = parseGachaPrompt(promptText);
-        const style: Style | undefined = 
-          (styleText.trim() || styleImages.length > 0)
-            ? {
-                text: styleText.trim() || undefined,
-                images: styleImages.length > 0 ? styleImages : undefined,
-              }
-            : undefined;
-        
-        const result = await generateImage(processedPrompt, { aspectRatio, imageSize }, style, promptImages);
-        const generationTime = imageTimer.stop();
-        
-        const imageId = `${Date.now()}-${i}`;
-        const timestamp = Date.now();
+        const imageId = `${baseTimestamp}-${i}-${Math.round(Math.random() * 1E9)}`;
+        const timestamp = baseTimestamp;
         
         const metadata = {
           request: {
@@ -568,40 +746,48 @@ function App() {
               ...(imageSize !== 'auto' && { imageSize }),
             },
           },
-          response: {
-            modelVersion: result.modelVersion,
-            responseId: result.responseId,
-            usageMetadata: result.usageMetadata,
-          },
-          generationTime,
           bookmarked: false,
         };
 
+        // Create metadata on server
+        try {
+          await createMetadataOnServer(imageId, metadata, currentProjectId);
+        } catch (error) {
+          console.warn('Failed to create metadata on server:', error);
+        }
+
         const newImage: GeneratedImage = {
           id: imageId,
-          url: result.imageUrl,
-          prompt: processedPrompt, // Display processed prompt in UI
+          url: '', // Empty URL indicates image is being generated
+          prompt: processedPrompt,
           timestamp,
-          generationTime,
+          isGenerating: true,
           metadata,
         };
 
-        setHistory((prev) => [newImage, ...prev]);
-
-        const filename = `gemini-gen-${imageId}`;
-        try {
-          await uploadToServer(result.imageUrl, metadata, filename, currentProjectId);
-          try {
-            const serverImages = await fetchGeneratedImages(currentProjectId);
-            setHistory(serverImages);
-          } catch (error) {
-            console.warn('Failed to reload images from server:', error);
-          }
-        } catch (uploadError) {
-          console.warn('Failed to auto-save to server:', uploadError);
-        }
+        newImages.push(newImage);
       }
 
+      // Sort newImages by batch index (larger index first) to ensure correct order
+      // Image ID format: ${timestamp}-${i}-${random}
+      newImages.sort((a, b) => {
+        const extractBatchIndex = (id: string): number => {
+          const parts = id.split('-');
+          if (parts.length >= 2) {
+            const index = parseInt(parts[1], 10);
+            return isNaN(index) ? 0 : index;
+          }
+          return 0;
+        };
+        const indexA = extractBatchIndex(a.id);
+        const indexB = extractBatchIndex(b.id);
+        return indexB - indexA; // Descending order (larger index first)
+      });
+
+      // Add new images to history
+      setHistory((prev) => [...newImages, ...prev]);
+
+      // Save project settings
       try {
         const promptImageFilenames = promptImages.map(img => img.filename || '').filter(Boolean);
         const referenceImageFilenames = refImages.map(img => img.filename || '').filter(Boolean);
@@ -632,21 +818,6 @@ function App() {
           description: err.message || "An unexpected error occurred.",
         });
       }
-    } finally {
-      // Stop timer and clear interval
-      if (timerRef.current) {
-        timerRef.current.stop();
-        timerRef.current = null;
-      }
-      if (elapsedIntervalRef.current !== null) {
-        clearInterval(elapsedIntervalRef.current);
-        elapsedIntervalRef.current = null;
-      }
-      setElapsedSeconds(0);
-      
-      setIsGenerating(false);
-      setCurrentBatchIndex(0);
-      setBatchSize(1);
     }
   };
 
@@ -1138,18 +1309,10 @@ function App() {
             {/* Action Button */}
             <Button
               onClick={handleGenerate}
-              disabled={isGenerating}
               className="w-full"
               size="lg"
             >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  GENERATING...
-                </>
-              ) : (
-                'GENERATE IMAGE'
-              )}
+              GENERATE IMAGE
             </Button>
           </aside>
 
@@ -1193,7 +1356,7 @@ function App() {
                 </div>
               </div>
             )}
-            {history.length === 0 && !isGenerating && (
+            {history.length === 0 && (
               viewMode === 'large' ? (
                 <Card>
                   <CardContent className="pt-6">
@@ -1216,38 +1379,6 @@ function App() {
             )}
 
             <div className="flex flex-wrap gap-4">
-              {isGenerating && (
-                viewMode === 'large' ? (
-                  <Card className="w-full max-w-2xl">
-                    <CardContent className="pt-6">
-                      <div className="space-y-4">
-                        <div className="w-full max-h-[500px] flex flex-col items-center justify-center bg-muted rounded-lg border overflow-hidden min-h-[300px]">
-                          <Loader2 className="h-12 w-12 animate-spin text-muted-foreground mb-4" />
-                          <p className="text-sm text-muted-foreground uppercase tracking-wider mb-2">
-                            Processing Image Data...
-                          </p>
-                          <p className="text-sm text-muted-foreground mb-2">
-                            {currentBatchIndex} / {batchSize}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {elapsedSeconds}s
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ) : (
-                  <div className="w-[200px] h-[200px] rounded-lg border overflow-hidden bg-muted flex flex-col items-center justify-center flex-shrink-0">
-                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-2" />
-                    <p className="text-xs text-muted-foreground mb-1">
-                      {currentBatchIndex} / {batchSize}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {elapsedSeconds}s
-                    </p>
-                  </div>
-                )
-              )}
               {history
                 .filter(item => !showBookmarkedOnly || item.metadata.bookmarked === true)
                 .map((item, idx) => (
@@ -1256,14 +1387,26 @@ function App() {
                     <CardContent className="pt-6">
                       <div className="space-y-4">
                         <div className="relative group">
-                          <div className="w-full max-h-[500px] flex items-center justify-center bg-muted rounded-lg border overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                               onClick={() => setSelectedImage(item)}>
-                            <img 
-                              src={item.url} 
-                              alt={`Generated ${idx}`} 
-                              className="max-w-full max-h-[500px] object-contain"
-                              style={{ objectFit: 'contain' }}
-                            />
+                          <div className="w-full max-h-[500px] flex items-center justify-center bg-muted rounded-lg border overflow-hidden min-h-[300px]"
+                               onClick={() => !item.isGenerating && setSelectedImage(item)}>
+                            {item.isGenerating || !item.url ? (
+                              <div className="flex flex-col items-center justify-center">
+                                <Loader2 className="h-12 w-12 animate-spin text-muted-foreground mb-4" />
+                                <p className="text-sm text-muted-foreground uppercase tracking-wider mb-1">
+                                  Generating...
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  {generatingElapsedTimes.get(item.id) || 0}s
+                                </p>
+                              </div>
+                            ) : (
+                              <img 
+                                src={item.url} 
+                                alt={`Generated ${idx}`} 
+                                className="max-w-full max-h-[500px] object-contain cursor-pointer hover:opacity-90 transition-opacity"
+                                style={{ objectFit: 'contain' }}
+                              />
+                            )}
                           </div>
                         </div>
                         
@@ -1291,7 +1434,10 @@ function App() {
                                 #{item.id}
                               </p>
                               <span className="text-xs text-muted-foreground">
-                                {item.generationTime !== undefined ? Math.round(item.generationTime / 1000) : 0}s
+                                {item.isGenerating 
+                                  ? (generatingElapsedTimes.get(item.id) || 0) + 's'
+                                  : (item.generationTime !== undefined ? Math.round(item.generationTime / 1000) + 's' : '0s')
+                                }
                               </span>
                             </div>
                             <p className="text-sm leading-relaxed line-clamp-3">{item.prompt}</p>
@@ -1309,12 +1455,14 @@ function App() {
                                 variant="outline"
                                 size="icon"
                                 onClick={() => downloadImageWithMetadata(item)}
+                                disabled={item.isGenerating || !item.url}
                               >
                                 <Download className="h-4 w-4" />
                               </Button>
                               <BookmarkButton
                                 image={item}
                                 onToggle={toggleBookmark}
+                                disabled={item.isGenerating || !item.url}
                               />
                               <Button
                                 variant="outline"
@@ -1336,45 +1484,59 @@ function App() {
                 ) : (
                   <div
                     key={item.id}
-                    className="relative w-[200px] h-[200px] rounded-lg border overflow-hidden cursor-pointer hover:opacity-90 transition-opacity bg-muted flex-shrink-0 group"
-                    onClick={() => setSelectedImage(item)}
+                    className="relative w-[200px] h-[200px] rounded-lg border overflow-hidden bg-muted flex-shrink-0 group"
+                    onClick={() => !item.isGenerating && setSelectedImage(item)}
                   >
-                    <img 
-                      src={item.url} 
-                      alt={`Generated ${idx}`} 
-                      className="w-full h-full object-contain"
-                      style={{ objectFit: 'contain' }}
-                    />
-                    {/* Bookmarked: Always show borderless icon */}
-                    {item.metadata.bookmarked ? (
-                      <div className="absolute bottom-2 right-2">
-                        <button
-                          className="p-1.5 rounded-full hover:bg-background/20 transition-colors"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleBookmark(item.id);
-                          }}
-                          title="Remove bookmark"
-                        >
-                          <BookmarkCheck className="h-4 w-4 fill-current text-foreground" />
-                        </button>
+                    {item.isGenerating || !item.url ? (
+                      <div className="w-full h-full flex flex-col items-center justify-center">
+                        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-2" />
+                        <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+                          Generating...
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {generatingElapsedTimes.get(item.id) || 0}s
+                        </p>
                       </div>
                     ) : (
-                      /* Not bookmarked: Show overlay button on hover */
-                      <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-7 w-7 bg-background/90 backdrop-blur-sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleBookmark(item.id);
-                          }}
-                          title="Add bookmark"
-                        >
-                          <Bookmark className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
+                      <>
+                        <img 
+                          src={item.url} 
+                          alt={`Generated ${idx}`} 
+                          className="w-full h-full object-contain cursor-pointer hover:opacity-90 transition-opacity"
+                          style={{ objectFit: 'contain' }}
+                        />
+                        {/* Bookmarked: Always show borderless icon */}
+                        {item.metadata.bookmarked ? (
+                          <div className="absolute bottom-2 right-2">
+                            <button
+                              className="p-1.5 rounded-full hover:bg-background/20 transition-colors"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleBookmark(item.id);
+                              }}
+                              title="Remove bookmark"
+                            >
+                              <BookmarkCheck className="h-4 w-4 fill-current text-foreground" />
+                            </button>
+                          </div>
+                        ) : (
+                          /* Not bookmarked: Show overlay button on hover */
+                          <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="h-7 w-7 bg-background/90 backdrop-blur-sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleBookmark(item.id);
+                              }}
+                              title="Add bookmark"
+                            >
+                              <Bookmark className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 )
@@ -1419,6 +1581,17 @@ function App() {
                     image={selectedImage}
                     onToggle={toggleBookmark}
                   />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      restoreParametersFromImage(selectedImage);
+                    }}
+                    title="Restore parameters"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                  </Button>
                 </div>
               </>
             )}
@@ -1755,7 +1928,7 @@ function App() {
                 )}
 
                 {/* Response Metadata */}
-                {viewingImage.metadata?.response && (
+                {viewingImage.metadata?.response && !viewingImage.isGenerating && (
                   <ModalSection title="Response Metadata">
                     <div className="space-y-1 text-sm">
                       {viewingImage.metadata.response.modelVersion && (

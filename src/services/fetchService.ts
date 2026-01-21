@@ -19,12 +19,14 @@ export const fetchGeneratedImages = async (projectId: string = 'default'): Promi
     
     // Convert server response to GeneratedImage format
     const images: GeneratedImage[] = data.files
-      .filter((file: any) => file.metadata && file.imageUrl) // Only include files with metadata
+      .filter((file: any) => file.metadata) // Only include files with metadata
       .map((file: any) => {
-        // Construct full image URL
-        const imageUrl = file.imageUrl.startsWith('http') 
-          ? file.imageUrl 
-          : `${apiUrl}${file.imageUrl}`;
+        // Construct full image URL (empty string if image is not yet generated)
+        const imageUrl = file.imageUrl && file.imageUrl.trim() !== ''
+          ? (file.imageUrl.startsWith('http') 
+              ? file.imageUrl 
+              : `${apiUrl}${file.imageUrl}`)
+          : '';
         
         if (!file.metadata) {
           throw new Error(`Metadata missing for image ${file.id}`);
@@ -42,6 +44,7 @@ export const fetchGeneratedImages = async (projectId: string = 'default'): Promi
         };
         
         const promptText = metadata.request.prompt.text || file.prompt || '';
+        const isGenerating = file.isGenerating === true || !imageUrl;
         
         return {
           id: file.id,
@@ -49,6 +52,7 @@ export const fetchGeneratedImages = async (projectId: string = 'default'): Promi
           prompt: promptText,
           timestamp: file.timestamp || 0,
           generationTime: metadata.generationTime,
+          isGenerating,
           metadata,
         };
       });
