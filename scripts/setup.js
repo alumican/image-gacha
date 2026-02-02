@@ -1,9 +1,16 @@
 #!/usr/bin/env node
 
-import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, statSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import readline from 'readline';
+import { execSync } from 'child_process';
+
+// Default port configurations
+const DEFAULT_FRONTEND_PORT = 5173;
+const DEFAULT_BACKEND_PORT = 3001;
+const DEFAULT_FRONTEND_URL = `http://localhost:${DEFAULT_FRONTEND_PORT}`;
+const DEFAULT_BACKEND_URL = `http://localhost:${DEFAULT_BACKEND_PORT}`;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -25,8 +32,71 @@ function question(query) {
 }
 
 
+/**
+ * Check Node.js version (requires 18+)
+ */
+function checkNodeVersion() {
+  const nodeVersion = process.version;
+  const majorVersion = parseInt(nodeVersion.slice(1).split('.')[0], 10);
+  
+  if (majorVersion < 18) {
+    console.error('❌ Error: Node.js version 18 or higher is required.');
+    console.error(`Current version: ${nodeVersion}`);
+    process.exit(1);
+  }
+  
+  console.log(`✓ Node.js ${nodeVersion} detected`);
+  console.log('');
+}
+
+/**
+ * Install dependencies using npm
+ */
+function installDependencies(directory, name) {
+  try {
+    console.log(`📦 Installing ${name} dependencies...`);
+    execSync('npm install', { 
+      cwd: directory, 
+      stdio: 'inherit',
+      encoding: 'utf-8'
+    });
+    console.log(`✓ ${name} dependencies installed`);
+    console.log('');
+    return true;
+  } catch (error) {
+    console.error(`❌ Failed to install ${name} dependencies`);
+    return false;
+  }
+}
+
 async function main() {
-  console.log('Setup - Image Gacha\n');
+  console.log('==========================================');
+  console.log('Image Gacha - Setup');
+  console.log('==========================================');
+  console.log('');
+  
+  // Check Node.js version
+  checkNodeVersion();
+  
+  // Install client dependencies
+  if (!installDependencies(rootDir, 'client')) {
+    process.exit(1);
+  }
+  
+  // Install server dependencies
+  const serverDir = join(rootDir, 'server');
+  if (!existsSync(serverDir)) {
+    console.error('❌ Error: server directory not found');
+    console.error('Please make sure you\'re running this script from the app directory');
+    process.exit(1);
+  }
+  
+  if (!installDependencies(serverDir, 'server')) {
+    process.exit(1);
+  }
+  
+  // Configure API key
+  console.log('⚙️  Configuring API key...');
   
   // Check if .env.local already exists
   if (existsSync(envLocalPath)) {
@@ -47,11 +117,11 @@ async function main() {
     envContent = `# Gemini API Configuration
 VITE_GEMINI_API_KEY=
 
-# API Server URL (default: http://localhost:3001)
-VITE_API_URL=http://localhost:3001
+# API Server URL (default: ${DEFAULT_BACKEND_URL})
+VITE_API_URL=${DEFAULT_BACKEND_URL}
 
-# Frontend URL (default: http://localhost:5173)
-VITE_FRONTEND_URL=http://localhost:5173
+# Frontend URL (default: ${DEFAULT_FRONTEND_URL})
+VITE_FRONTEND_URL=${DEFAULT_FRONTEND_URL}
 `;
   }
   
@@ -71,21 +141,26 @@ VITE_FRONTEND_URL=http://localhost:5173
   
   // Ensure URLs are set to defaults if not present
   if (!envContent.includes('VITE_API_URL=')) {
-    envContent += '\n# API Server URL (default: http://localhost:3001)\nVITE_API_URL=http://localhost:3001\n';
+    envContent += `\n# API Server URL (default: ${DEFAULT_BACKEND_URL})\nVITE_API_URL=${DEFAULT_BACKEND_URL}\n`;
   }
   if (!envContent.includes('VITE_FRONTEND_URL=')) {
-    envContent += '\n# Frontend URL (default: http://localhost:5173)\nVITE_FRONTEND_URL=http://localhost:5173\n';
+    envContent += `\n# Frontend URL (default: ${DEFAULT_FRONTEND_URL})\nVITE_FRONTEND_URL=${DEFAULT_FRONTEND_URL}\n`;
   }
   
   // Write .env.local
   writeFileSync(envLocalPath, envContent, 'utf-8');
   
-  console.log('\nSetup complete!');
+  console.log('');
+  console.log('==========================================');
+  console.log('✓ Setup complete!');
+  console.log('==========================================');
+  console.log('');
   console.log(`   Created ${envLocalPath}`);
   console.log('\nNote: To change API server URL or frontend URL, edit .env.local');
   console.log('\nNext steps:');
-  console.log('   1. Run "npm run dev:all" to start the application');
-  console.log('   2. Open http://localhost:5173 in your browser\n');
+  console.log('   1. Run "./launch.sh" to start the application');
+  console.log('   2. Or run "npm run dev:all" manually');
+  console.log('');
   
   rl.close();
 }
