@@ -56,6 +56,7 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  // tailwindcss-animate is replaced by tw-animate-css for Tailwind CSS 4 compatibility
+  // plugins: [require("tailwindcss-animate")],
 }
 
