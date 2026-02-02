@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { HelpButton } from './HelpButton';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/classNames';
 
 interface ParameterCardProps {
   number: string;

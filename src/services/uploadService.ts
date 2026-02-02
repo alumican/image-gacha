@@ -1,4 +1,4 @@
-import { convertImageToBlob, getApiUrl } from '../lib/imageUtils';
+import { convertImageToBlob, getApiUrl } from '../utils/imageUtils';
 
 /**
  * Create metadata JSON file on server (before image generation)

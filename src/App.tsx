@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { generateImage } from './services/geminiService';
-import { uploadToServer, createMetadataOnServer, updateImageOnServer } from './services/uploadService';
+import { createMetadataOnServer, updateImageOnServer } from './services/uploadService';
 import { fetchGeneratedImages } from './services/fetchService';
 import { getProjects, createProject, getProjectSettings, saveProjectSettings, uploadReferenceImageForSettings, uploadReferenceImageForOutputs, deleteReferenceImageFromSettings, copyReferenceImagesFromOutputsToSettings, Project } from './services/projectService';
-import { parseGachaPrompt, previewGachaPrompt } from './lib/gachaParser';
-import { convertImageToFile, convertImageToBlob, getApiUrl } from './lib/imageUtils';
+import { parseGachaPrompt, previewGachaPrompt } from './utils/gachaParser';
+import { convertImageToFile, getApiUrl, downloadImage, downloadImageWithMetadata } from './utils/imageUtils';
+import { copyToClipboard as copyToClipboardUtil } from './utils/clipboard';
 import { AspectRatio, ImageSize, ReferenceImage, GeneratedImage, Style } from './types';
 import { Timer } from './utils/timer';
 import { getCurrentProjectId, setCurrentProjectId as saveCurrentProjectId } from './utils/localStorage';
@@ -14,6 +15,7 @@ import { Card, CardContent } from './components/ui/card';
 import { Label } from './components/ui/label';
 import { Input } from './components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './components/ui/dialog';
+import { VisuallyHidden } from './components/ui/visually-hidden';
 import { HelpDialog } from './components/HelpDialog';
 import { ExpandablePane } from './components/ExpandablePane';
 import { ParameterCard } from './components/ParameterCard';
@@ -21,37 +23,10 @@ import { FormField } from './components/FormField';
 import { SimpleSelect } from './components/SimpleSelect';
 import { ModalSection } from './components/ModalSection';
 import { BookmarkButton } from './components/BookmarkButton';
+import { ThumbnailImage } from './components/ThumbnailImage';
 import { Toaster } from './components/ui/toaster';
 import { useToast } from './components/ui/use-toast';
 import { X, Upload, Download, Loader2, Pencil, Grid3x3, List, Search, Copy, Plus, RotateCcw, Bookmark, BookmarkCheck } from 'lucide-react';
-
-const ThumbnailImage: React.FC<{
-  initialUrl: string;
-  fallbackUrl: string;
-  alt: string;
-  onImageClick: (url: string) => void;
-}> = ({ initialUrl, fallbackUrl, alt, onImageClick }) => {
-  const [imageUrl, setImageUrl] = useState<string>(initialUrl);
-  
-  return (
-    <div 
-      className="relative border rounded-md overflow-hidden bg-muted cursor-pointer group"
-      style={{ width: '100px', height: '100px' }}
-      onClick={() => onImageClick(imageUrl)}
-    >
-      <img
-        src={imageUrl}
-        alt={alt}
-        className="w-full h-full object-contain"
-        onError={() => {
-          if (imageUrl !== fallbackUrl) {
-            setImageUrl(fallbackUrl);
-          }
-        }}
-      />
-    </div>
-  );
-};
 
 function App() {
   const { toast } = useToast();
@@ -64,9 +39,6 @@ function App() {
   const [imageSize, setImageSize] = useState<ImageSize>('auto');
   const [batchCount, setBatchCount] = useState<string>('1');
   const [history, setHistory] = useState<GeneratedImage[]>([]);
-  const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
-  const timerRef = useRef<Timer | null>(null);
-  const elapsedIntervalRef = useRef<number | null>(null);
   const generatingImagesRef = useRef<Set<string>>(new Set());
   const generatingTimersRef = useRef<Map<string, Timer>>(new Map());
   const [generatingElapsedTimes, setGeneratingElapsedTimes] = useState<Map<string, number>>(new Map());
@@ -103,12 +75,11 @@ function App() {
    */
   const copyToClipboard = async (text: string, successMessage: string = "Copied to clipboard.") => {
     try {
-      await navigator.clipboard.writeText(text);
+      await copyToClipboardUtil(text);
       toast({
         description: successMessage,
       });
     } catch (error) {
-      console.error('Failed to copy to clipboard:', error);
       toast({
         variant: "destructive",
         description: "Failed to copy.",
@@ -840,21 +811,11 @@ function App() {
   };
 
   /**
-   * Download image and JSON metadata as a set
+   * Download image wrapper with error handling and toast notification
    */
-  const downloadImage = async (imageUrl: string, filename: string = 'image.png') => {
+  const handleDownloadImage = async (imageUrl: string, filename: string = 'image.png') => {
     try {
-      // Convert image to blob
-      const imageBlob = await convertImageToBlob(imageUrl);
-      const url = URL.createObjectURL(imageBlob);
-      
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      await downloadImage(imageUrl, filename);
     } catch (error) {
       console.error('Download error:', error);
       toast({
@@ -864,25 +825,12 @@ function App() {
     }
   };
 
-  const downloadImageWithMetadata = async (image: GeneratedImage) => {
-    const baseFilename = `gemini-gen-${image.id}`;
-    
+  /**
+   * Download image with metadata wrapper with error handling and toast notification
+   */
+  const handleDownloadImageWithMetadata = async (image: GeneratedImage) => {
     try {
-      // Download image only
-      await downloadImage(image.url, `${baseFilename}.png`);
-
-      if (image.metadata) {
-        const jsonData = JSON.stringify(image.metadata, null, 2);
-        const jsonBlob = new Blob([jsonData], { type: 'application/json' });
-        const jsonUrl = URL.createObjectURL(jsonBlob);
-        const jsonLink = document.createElement('a');
-        jsonLink.href = jsonUrl;
-        jsonLink.download = `${baseFilename}.json`;
-        document.body.appendChild(jsonLink);
-        jsonLink.click();
-        document.body.removeChild(jsonLink);
-        URL.revokeObjectURL(jsonUrl);
-      }
+      await downloadImageWithMetadata(image);
     } catch (error) {
       console.error('Failed to download image:', error);
       toast({
@@ -1464,7 +1412,7 @@ function App() {
                               <Button
                                 variant="outline"
                                 size="icon"
-                                onClick={() => downloadImageWithMetadata(item)}
+                                onClick={() => handleDownloadImageWithMetadata(item)}
                                 disabled={item.isGenerating || !item.url}
                               >
                                 <Download className="h-4 w-4" />
@@ -1563,6 +1511,10 @@ function App() {
       {/* Image Preview Dialog */}
       <Dialog open={selectedImage !== null} onOpenChange={(open) => !open && setSelectedImage(null)}>
         <DialogContent className="max-w-[90vw] max-h-[90vh] p-0">
+          <VisuallyHidden>
+            <DialogTitle>Image Preview</DialogTitle>
+            <DialogDescription>Preview of the generated image</DialogDescription>
+          </VisuallyHidden>
           <div className="relative w-full h-full flex items-center justify-center bg-muted p-4">
             {selectedImage && (
               <>
@@ -1583,7 +1535,7 @@ function App() {
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => downloadImage(selectedImage.url, `gemini-gen-${selectedImage.id}.png`)}
+                    onClick={() => handleDownloadImage(selectedImage.url, `gemini-gen-${selectedImage.id}.png`)}
                   >
                     <Download className="h-4 w-4" />
                   </Button>
@@ -1999,6 +1951,10 @@ function App() {
       {/* Thumbnail Image Preview Dialog */}
       <Dialog open={selectedThumbnailImage !== null} onOpenChange={(open) => !open && setSelectedThumbnailImage(null)}>
         <DialogContent className="max-w-[90vw] max-h-[90vh] p-0">
+          <VisuallyHidden>
+            <DialogTitle>Thumbnail Preview</DialogTitle>
+            <DialogDescription>Preview of the thumbnail image</DialogDescription>
+          </VisuallyHidden>
           <div className="relative w-full h-full flex items-center justify-center bg-muted p-4">
             {selectedThumbnailImage && (
               <>
@@ -2014,7 +1970,7 @@ function App() {
                     size="icon"
                     onClick={() => {
                       const filename = selectedThumbnailImage.split('/').pop() || 'image.png';
-                      downloadImage(selectedThumbnailImage, filename);
+                      handleDownloadImage(selectedThumbnailImage, filename);
                     }}
                   >
                     <Download className="h-4 w-4" />

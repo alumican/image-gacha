@@ -2,7 +2,7 @@
  * Project management service
  */
 
-import { getApiUrl } from '../lib/imageUtils';
+import { getApiUrl } from '../utils/imageUtils';
 
 export interface Project {
   id: string;

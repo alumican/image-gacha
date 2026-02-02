@@ -106,3 +106,49 @@ export const getApiUrl = (): string => {
   return import.meta.env.VITE_API_URL || 'http://localhost:3001';
 };
 
+/**
+ * Download image from URL
+ * @param imageUrl - Image URL to download
+ * @param filename - Filename for the downloaded file
+ * @throws Error if download fails
+ */
+export const downloadImage = async (imageUrl: string, filename: string = 'image.png'): Promise<void> => {
+  // Convert image to blob
+  const imageBlob = await convertImageToBlob(imageUrl);
+  const url = URL.createObjectURL(imageBlob);
+  
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+
+/**
+ * Download image with metadata JSON file
+ * @param image - GeneratedImage object containing image URL and metadata
+ * @throws Error if download fails
+ */
+export const downloadImageWithMetadata = async (image: { id: string; url: string; metadata?: any }): Promise<void> => {
+  const baseFilename = `gemini-gen-${image.id}`;
+  
+  // Download image
+  await downloadImage(image.url, `${baseFilename}.png`);
+
+  // Download metadata JSON if available
+  if (image.metadata) {
+    const jsonData = JSON.stringify(image.metadata, null, 2);
+    const jsonBlob = new Blob([jsonData], { type: 'application/json' });
+    const jsonUrl = URL.createObjectURL(jsonBlob);
+    const jsonLink = document.createElement('a');
+    jsonLink.href = jsonUrl;
+    jsonLink.download = `${baseFilename}.json`;
+    document.body.appendChild(jsonLink);
+    jsonLink.click();
+    document.body.removeChild(jsonLink);
+    URL.revokeObjectURL(jsonUrl);
+  }
+};
+

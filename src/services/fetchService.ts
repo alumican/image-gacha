@@ -1,5 +1,5 @@
 import { GeneratedImage } from '../types';
-import { getApiUrl } from '../lib/imageUtils';
+import { getApiUrl } from '../utils/imageUtils';
 
 /**
  * Fetch all generated images from server for a project

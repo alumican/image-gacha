@@ -1,6 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { AspectRatio, ImageSize, ReferenceImage, Style } from "../types";
-import { convertImageToBase64 } from "../lib/imageUtils";
+import { convertImageToBase64 } from "../utils/imageUtils";
 
 /**
  * Get API key from environment variable

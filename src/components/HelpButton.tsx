@@ -1,6 +1,6 @@
 import { HelpCircle } from 'lucide-react';
 import { Button } from './ui/button';
-import { cn } from '../lib/utils';
+import { cn } from '@/utils/classNames';
 
 interface HelpButtonProps {
   onClick: () => void;
