@@ -207,3 +207,42 @@ export const uploadReferenceImageForOutputs = async (
   }
 };
 
+/**
+ * Copy reference images from outputs to settings
+ */
+export const copyReferenceImagesFromOutputsToSettings = async (
+  projectId: string,
+  filenames: string[]
+): Promise<{ success: boolean; images?: Array<{ originalFilename: string; filename: string; imageUrl: string }>; error?: string }> => {
+  try {
+    const response = await fetch(`${apiUrl}/api/projects/${projectId}/settings/reference-images/copy-from-outputs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ filenames }),
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Copy failed' }));
+      throw new Error(errorData.error || 'Copy failed');
+    }
+    
+    const data = await response.json();
+    return {
+      success: true,
+      images: data.images.map((img: any) => ({
+        originalFilename: img.originalFilename,
+        filename: img.filename,
+        imageUrl: img.imageUrl.startsWith('http') ? img.imageUrl : `${apiUrl}${img.imageUrl}`,
+      })),
+    };
+  } catch (error: any) {
+    console.error('Failed to copy reference images:', error);
+    return {
+      success: false,
+      error: error.message || 'Failed to copy reference images',
+    };
+  }
+};
+

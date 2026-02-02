@@ -722,6 +722,79 @@ app.delete('/api/projects/:projectId/settings/reference-images/:filename', async
 });
 
 /**
+ * Copy reference images from outputs to settings
+ * POST /api/projects/:projectId/settings/reference-images/copy-from-outputs
+ * Body: { filenames: string[] }
+ */
+app.post('/api/projects/:projectId/settings/reference-images/copy-from-outputs', async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const { filenames } = req.body;
+    
+    if (!Array.isArray(filenames) || filenames.length === 0) {
+      return res.status(400).json({ error: 'Filenames array is required' });
+    }
+    
+    const outputsRefImagesDir = path.join(projectsDir, projectId, 'outputs', 'reference-images');
+    const settingsRefImagesDir = path.join(projectsDir, projectId, 'settings', 'reference-images');
+    await fs.mkdir(settingsRefImagesDir, { recursive: true });
+    
+    const copiedImages: Array<{ originalFilename: string; filename: string; imageUrl: string }> = [];
+    
+    for (const originalFilename of filenames) {
+      try {
+        const sourcePath = path.join(outputsRefImagesDir, originalFilename);
+        
+        // Check if source file exists
+        try {
+          await fs.access(sourcePath);
+        } catch {
+          console.warn(`Source file not found: ${originalFilename}`);
+          continue;
+        }
+        
+        // Calculate hash of the source file
+        const hash = await calculateFileHash(sourcePath);
+        const hashPrefix = hash.substring(0, 16);
+        const ext = path.extname(originalFilename);
+        const finalFilename = `ref-${hashPrefix}${ext}`;
+        const destPath = path.join(settingsRefImagesDir, finalFilename);
+        
+        // Check if file with same hash already exists in settings
+        try {
+          await fs.access(destPath);
+          // File already exists, no need to copy
+          copiedImages.push({
+            originalFilename,
+            filename: finalFilename,
+            imageUrl: `/uploads/projects/${projectId}/settings/reference-images/${finalFilename}`,
+          });
+        } catch {
+          // File doesn't exist, copy it
+          await fs.copyFile(sourcePath, destPath);
+          copiedImages.push({
+            originalFilename,
+            filename: finalFilename,
+            imageUrl: `/uploads/projects/${projectId}/settings/reference-images/${finalFilename}`,
+          });
+        }
+      } catch (error: any) {
+        console.error(`Failed to copy image ${originalFilename}:`, error);
+        // Continue with other images
+      }
+    }
+    
+    res.json({
+      success: true,
+      images: copiedImages,
+    });
+  } catch (error: any) {
+    console.error('Copy reference images error:', error);
+    res.status(500).json({ error: error.message || 'Internal server error' });
+  }
+});
+
+/**
  * Upload reference image for outputs (used in generation)
  * POST /api/projects/:projectId/outputs/reference-images
  * Body: FormData with 'image' (file)

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { generateImage } from './services/geminiService';
 import { uploadToServer, createMetadataOnServer, updateImageOnServer } from './services/uploadService';
 import { fetchGeneratedImages } from './services/fetchService';
-import { getProjects, createProject, getProjectSettings, saveProjectSettings, uploadReferenceImageForSettings, uploadReferenceImageForOutputs, deleteReferenceImageFromSettings, Project } from './services/projectService';
+import { getProjects, createProject, getProjectSettings, saveProjectSettings, uploadReferenceImageForSettings, uploadReferenceImageForOutputs, deleteReferenceImageFromSettings, copyReferenceImagesFromOutputsToSettings, Project } from './services/projectService';
 import { parseGachaPrompt, previewGachaPrompt } from './lib/gachaParser';
 import { convertImageToFile, convertImageToBlob, getApiUrl } from './lib/imageUtils';
 import { AspectRatio, ImageSize, ReferenceImage, GeneratedImage, Style } from './types';
@@ -888,55 +888,65 @@ function App() {
       const { request } = image.metadata;
       const apiUrl = getApiUrl();
 
+      // Collect all image filenames that need to be copied from outputs to settings
+      const imageFilenamesToCopy: string[] = [];
+      if (request.prompt.images && request.prompt.images.length > 0) {
+        imageFilenamesToCopy.push(...request.prompt.images);
+      }
+      if (request.style?.images && request.style.images.length > 0) {
+        imageFilenamesToCopy.push(...request.style.images);
+      }
+
+      // Copy images from outputs/reference-images to settings/reference-images
+      // Create a map of original filename to copied image info for quick lookup
+      const copiedImagesMap = new Map<string, { filename: string; imageUrl: string }>();
+      if (imageFilenamesToCopy.length > 0) {
+        const copyResult = await copyReferenceImagesFromOutputsToSettings(currentProjectId, imageFilenamesToCopy);
+        if (copyResult.success && copyResult.images) {
+          for (const img of copyResult.images) {
+            copiedImagesMap.set(img.originalFilename, {
+              filename: img.filename,
+              imageUrl: img.imageUrl,
+            });
+          }
+        } else {
+          console.warn('Failed to copy some images from outputs to settings:', copyResult.error);
+        }
+      }
+
       const promptTextToRestore = request.prompt.original || request.prompt.text || '';
       setPromptText(promptTextToRestore);
       if (request.prompt.images && request.prompt.images.length > 0) {
         const promptImagesList: ReferenceImage[] = [];
-        for (const filename of request.prompt.images) {
-          try {
-            let imageBlob: Blob | null = null;
-            let imageMimeType = 'image/png';
-            
-            const outputsImageUrl = `${apiUrl}/uploads/projects/${currentProjectId}/outputs/reference-images/${filename}`;
+        for (const originalFilename of request.prompt.images) {
+          const copiedImage = copiedImagesMap.get(originalFilename);
+          if (copiedImage) {
+            // Use the copied image from settings
+            promptImagesList.push({
+              id: Math.random().toString(36).substr(2, 9),
+              data: copiedImage.imageUrl,
+              mimeType: 'image/png', // Default, actual type doesn't matter for display
+              filename: copiedImage.filename,
+            });
+          } else {
+            // Fallback: try to load from settings (in case it already exists)
             try {
-              const outputsResponse = await fetch(outputsImageUrl);
-              if (outputsResponse.ok) {
-                imageBlob = await outputsResponse.blob();
-                imageMimeType = outputsResponse.headers.get('content-type') || 'image/png';
-              }
-            } catch (error) {
-              console.warn(`Failed to load from outputs/reference-images: ${filename}`, error);
-            }
-            
-            if (!imageBlob) {
-              const settingsImageUrl = `${apiUrl}/uploads/projects/${currentProjectId}/settings/reference-images/${filename}`;
-              try {
-                const settingsResponse = await fetch(settingsImageUrl);
-                if (settingsResponse.ok) {
-                  imageBlob = await settingsResponse.blob();
-                  imageMimeType = settingsResponse.headers.get('content-type') || 'image/png';
-                }
-              } catch (error) {
-                console.warn(`Failed to load from settings/reference-images: ${filename}`, error);
-              }
-            }
-            
-            if (imageBlob) {
-              const file = new File([imageBlob], filename, { type: imageMimeType });
-              const uploadResult = await uploadReferenceImageForSettings(currentProjectId, file);
-              if (uploadResult.success && uploadResult.imageUrl && uploadResult.filename) {
+              const settingsImageUrl = `${apiUrl}/uploads/projects/${currentProjectId}/settings/reference-images/${originalFilename}`;
+              const settingsResponse = await fetch(settingsImageUrl);
+              if (settingsResponse.ok) {
+                const imageMimeType = settingsResponse.headers.get('content-type') || 'image/png';
                 promptImagesList.push({
                   id: Math.random().toString(36).substr(2, 9),
-                  data: uploadResult.imageUrl,
+                  data: settingsImageUrl.startsWith('http') ? settingsImageUrl : `${apiUrl}${settingsImageUrl}`,
                   mimeType: imageMimeType,
-                  filename: uploadResult.filename,
+                  filename: originalFilename,
                 });
+              } else {
+                console.warn(`Image not found in settings: ${originalFilename}`);
               }
-            } else {
-              console.warn(`Image not found: ${filename}`);
+            } catch (error) {
+              console.warn(`Failed to load prompt image ${originalFilename}:`, error);
             }
-          } catch (error) {
-            console.warn(`Failed to load prompt image ${filename}:`, error);
           }
         }
         setPromptImages(promptImagesList);
@@ -948,51 +958,35 @@ function App() {
       setStyleText(styleTextToRestore);
       if (request.style?.images && request.style.images.length > 0) {
         const styleImagesList: ReferenceImage[] = [];
-        for (const filename of request.style.images) {
-          try {
-            let imageBlob: Blob | null = null;
-            let imageMimeType = 'image/png';
-            
-            const outputsImageUrl = `${apiUrl}/uploads/projects/${currentProjectId}/outputs/reference-images/${filename}`;
+        for (const originalFilename of request.style.images) {
+          const copiedImage = copiedImagesMap.get(originalFilename);
+          if (copiedImage) {
+            // Use the copied image from settings
+            styleImagesList.push({
+              id: Math.random().toString(36).substr(2, 9),
+              data: copiedImage.imageUrl,
+              mimeType: 'image/png', // Default, actual type doesn't matter for display
+              filename: copiedImage.filename,
+            });
+          } else {
+            // Fallback: try to load from settings (in case it already exists)
             try {
-              const outputsResponse = await fetch(outputsImageUrl);
-              if (outputsResponse.ok) {
-                imageBlob = await outputsResponse.blob();
-                imageMimeType = outputsResponse.headers.get('content-type') || 'image/png';
-              }
-            } catch (error) {
-              console.warn(`Failed to load from outputs/reference-images: ${filename}`, error);
-            }
-            
-            if (!imageBlob) {
-              const settingsImageUrl = `${apiUrl}/uploads/projects/${currentProjectId}/settings/reference-images/${filename}`;
-              try {
-                const settingsResponse = await fetch(settingsImageUrl);
-                if (settingsResponse.ok) {
-                  imageBlob = await settingsResponse.blob();
-                  imageMimeType = settingsResponse.headers.get('content-type') || 'image/png';
-                }
-              } catch (error) {
-                console.warn(`Failed to load from settings/reference-images: ${filename}`, error);
-              }
-            }
-            
-            if (imageBlob) {
-              const file = new File([imageBlob], filename, { type: imageMimeType });
-              const uploadResult = await uploadReferenceImageForSettings(currentProjectId, file);
-              if (uploadResult.success && uploadResult.imageUrl && uploadResult.filename) {
+              const settingsImageUrl = `${apiUrl}/uploads/projects/${currentProjectId}/settings/reference-images/${originalFilename}`;
+              const settingsResponse = await fetch(settingsImageUrl);
+              if (settingsResponse.ok) {
+                const imageMimeType = settingsResponse.headers.get('content-type') || 'image/png';
                 styleImagesList.push({
                   id: Math.random().toString(36).substr(2, 9),
-                  data: uploadResult.imageUrl,
+                  data: settingsImageUrl.startsWith('http') ? settingsImageUrl : `${apiUrl}${settingsImageUrl}`,
                   mimeType: imageMimeType,
-                  filename: uploadResult.filename,
+                  filename: originalFilename,
                 });
+              } else {
+                console.warn(`Image not found in settings: ${originalFilename}`);
               }
-            } else {
-              console.warn(`Image not found: ${filename}`);
+            } catch (error) {
+              console.warn(`Failed to load style image ${originalFilename}:`, error);
             }
-          } catch (error) {
-            console.warn(`Failed to load style image ${filename}:`, error);
           }
         }
         setStyleImages(styleImagesList);
