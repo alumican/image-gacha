@@ -98,6 +98,24 @@ function App() {
   const [newProjectName, setNewProjectName] = useState<string>('');
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState<boolean>(false);
 
+  /**
+   * Copy text to clipboard and show toast notification
+   */
+  const copyToClipboard = async (text: string, successMessage: string = "Copied to clipboard.") => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        description: successMessage,
+      });
+    } catch (error) {
+      console.error('Failed to copy to clipboard:', error);
+      toast({
+        variant: "destructive",
+        description: "Failed to copy.",
+      });
+    }
+  };
+
   const toggleBookmark = async (imageId: string) => {
     const image = history.find(img => img.id === imageId);
     if (!image) return;
@@ -1055,7 +1073,13 @@ function App() {
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
-                    <p className="text-xs uppercase tracking-wider text-muted-foreground ml-2">
+                    <p 
+                      className="text-xs uppercase tracking-wider text-muted-foreground ml-2 cursor-pointer hover:text-foreground transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        copyToClipboard(currentProjectId, "Project ID copied to clipboard.");
+                      }}
+                    >
                       {currentProjectId}
                     </p>
                   </div>
@@ -1412,20 +1436,9 @@ function App() {
                             <div className="flex items-center justify-between">
                               <p 
                                 className="text-xs uppercase tracking-wider text-muted-foreground cursor-pointer hover:text-foreground transition-colors"
-                                onClick={async (e) => {
+                                onClick={(e) => {
                                   e.stopPropagation();
-                                  try {
-                                    await navigator.clipboard.writeText(item.id);
-                                    toast({
-                                      description: "ID copied to clipboard.",
-                                    });
-                                  } catch (error) {
-                                    console.error('Failed to copy ID:', error);
-                                    toast({
-                                      variant: "destructive",
-                                      description: "Failed to copy ID.",
-                                    });
-                                  }
+                                  copyToClipboard(item.id, "ID copied to clipboard.");
                                 }}
                               >
                                 #{item.id}

@@ -725,19 +725,50 @@ app.delete('/api/projects/:projectId/settings/reference-images/:filename', async
  * Copy reference images from outputs to settings
  * POST /api/projects/:projectId/settings/reference-images/copy-from-outputs
  * Body: { filenames: string[] }
+ * Clears settings/reference-images folder before copying to avoid unused images
  */
 app.post('/api/projects/:projectId/settings/reference-images/copy-from-outputs', async (req, res) => {
   try {
     const { projectId } = req.params;
     const { filenames } = req.body;
     
-    if (!Array.isArray(filenames) || filenames.length === 0) {
+    if (!Array.isArray(filenames)) {
       return res.status(400).json({ error: 'Filenames array is required' });
     }
     
     const outputsRefImagesDir = path.join(projectsDir, projectId, 'outputs', 'reference-images');
     const settingsRefImagesDir = path.join(projectsDir, projectId, 'settings', 'reference-images');
     await fs.mkdir(settingsRefImagesDir, { recursive: true });
+    
+    // Clear all existing files in settings/reference-images folder
+    try {
+      const existingFiles = await fs.readdir(settingsRefImagesDir);
+      await Promise.all(
+        existingFiles.map(async (file) => {
+          const filePath = path.join(settingsRefImagesDir, file);
+          try {
+            const stat = await fs.stat(filePath);
+            if (stat.isFile()) {
+              await fs.unlink(filePath);
+            }
+          } catch (error) {
+            // Ignore errors for individual file deletion
+            console.warn(`Failed to delete file ${file}:`, error);
+          }
+        })
+      );
+    } catch (error) {
+      // If directory doesn't exist or is empty, that's fine
+      console.warn('Failed to clear settings/reference-images folder:', error);
+    }
+    
+    // If no filenames provided, just clear the folder and return
+    if (filenames.length === 0) {
+      return res.json({
+        success: true,
+        images: [],
+      });
+    }
     
     const copiedImages: Array<{ originalFilename: string; filename: string; imageUrl: string }> = [];
     
@@ -760,24 +791,13 @@ app.post('/api/projects/:projectId/settings/reference-images/copy-from-outputs',
         const finalFilename = `ref-${hashPrefix}${ext}`;
         const destPath = path.join(settingsRefImagesDir, finalFilename);
         
-        // Check if file with same hash already exists in settings
-        try {
-          await fs.access(destPath);
-          // File already exists, no need to copy
-          copiedImages.push({
-            originalFilename,
-            filename: finalFilename,
-            imageUrl: `/uploads/projects/${projectId}/settings/reference-images/${finalFilename}`,
-          });
-        } catch {
-          // File doesn't exist, copy it
-          await fs.copyFile(sourcePath, destPath);
-          copiedImages.push({
-            originalFilename,
-            filename: finalFilename,
-            imageUrl: `/uploads/projects/${projectId}/settings/reference-images/${finalFilename}`,
-          });
-        }
+        // Copy the file (folder is already cleared, so no need to check for existing files)
+        await fs.copyFile(sourcePath, destPath);
+        copiedImages.push({
+          originalFilename,
+          filename: finalFilename,
+          imageUrl: `/uploads/projects/${projectId}/settings/reference-images/${finalFilename}`,
+        });
       } catch (error: any) {
         console.error(`Failed to copy image ${originalFilename}:`, error);
         // Continue with other images
