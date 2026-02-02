@@ -1055,6 +1055,9 @@ function App() {
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
+                    <p className="text-xs uppercase tracking-wider text-muted-foreground ml-2">
+                      {currentProjectId}
+                    </p>
                   </div>
                 </div>
             <div className="flex items-center gap-4 ml-auto">
@@ -1408,7 +1411,7 @@ function App() {
                           <div className="flex-1 space-y-1">
                             <div className="flex items-center justify-between">
                               <p 
-                                className="text-xs uppercase font-semibold tracking-wider text-muted-foreground cursor-pointer hover:text-foreground transition-colors"
+                                className="text-xs uppercase tracking-wider text-muted-foreground cursor-pointer hover:text-foreground transition-colors"
                                 onClick={async (e) => {
                                   e.stopPropagation();
                                   try {
