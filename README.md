@@ -7,8 +7,8 @@ A local image generation application using Gemini 3 Pro Image API.
 - **Text Prompt Generation**: Create images from text descriptions
 - **Reference Images**: Upload multiple reference images for style or composition guidance
 - **Gacha Notation**: Use `{{option1,option2,option3}}(N)` syntax to randomly select from multiple options
-- **Aspect Ratios**: Choose from 1:1, 2:3, 3:2, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9
-- **Image Sizes**: Select 1K, 2K, or 4K resolution
+- **Aspect Ratios**: Choose from `1:1`, `2:3`, `3:2`, `3:4`, `4:3`, `4:5`, `5:4`, `9:16`, `16:9`, `21:9`
+- **Image Sizes**: Select `1K`, `2K`, or `4K` resolution
 - **Project Management**: Organize your work into multiple projects with separate settings and history
 - **Reproducibility**: Save and restore generation parameters for each image
 - **Generation History**: View, bookmark, and download all generated images
@@ -69,18 +69,18 @@ Use `{{option1,option2,option3}}(N)` syntax to randomly select items:
 {{red,blue,green}}(2)
 ```
 
-This randomly selects 2 items from the list (e.g., "red green" or "blue red").
+This randomly selects 2 items from the list (e.g., `red green` or `blue red`).
 
 **Features:**
 - Multi-line format supported
-- Custom separators: `{{A,B}}(2, ", ")` → "A, B"
+- Custom separators: `{{A,B}}(2, ", ")` → `A, B`
 - Escape special characters with backslash: `\{`, `\}`, `\,`, `\\`, `\n`, `\t`, `\r`
 
 **Example:**
 ```
 A {{cat,dog,bird}}(2) in a {{forest,city,beach}}(1)
 ```
-This might generate: "A cat bird in a forest" (randomly selected).
+This might generate: `A cat bird in a forest` (randomly selected).
 
 ### Restoring Parameters
 
