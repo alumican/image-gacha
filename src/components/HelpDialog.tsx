@@ -28,12 +28,12 @@ export function HelpDialog({
 }: HelpDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
-        <div className="space-y-3">{children}</div>
+        <div className="space-y-3 overflow-y-auto flex-1 min-h-0 px-1">{children}</div>
       </DialogContent>
     </Dialog>
   );

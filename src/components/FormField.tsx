@@ -15,8 +15,8 @@ export const FormField: React.FC<FormFieldProps> = ({
   className = '',
 }) => {
   return (
-    <div className={`space-y-2 ${className}`}>
-      <Label htmlFor={htmlFor}>{label}</Label>
+    <div className={className}>
+      <Label htmlFor={htmlFor} className="block mb-2">{label}</Label>
       {children}
     </div>
   );

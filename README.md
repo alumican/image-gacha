@@ -78,7 +78,7 @@ This randomly selects 2 items from the list (e.g., "red green" or "blue red").
 
 **Example:**
 ```
-A {{cat,dog,bird}}(2) in a {{forest,city,beach}}()
+A {{cat,dog,bird}}(2) in a {{forest,city,beach}}(1)
 ```
 This might generate: "A cat bird in a forest" (randomly selected).
 

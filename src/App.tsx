@@ -3,30 +3,29 @@ import { generateImage } from './services/geminiService';
 import { createMetadataOnServer, updateImageOnServer } from './services/uploadService';
 import { fetchGeneratedImages } from './services/fetchService';
 import { getProjects, createProject, getProjectSettings, saveProjectSettings, uploadReferenceImageForSettings, uploadReferenceImageForOutputs, deleteReferenceImageFromSettings, copyReferenceImagesFromOutputsToSettings, Project } from './services/projectService';
-import { parseGachaPrompt, previewGachaPrompt } from './utils/gachaParser';
+import { parseGachaPrompt } from './utils/gachaParser';
 import { convertImageToFile, getApiUrl, downloadImage, downloadImageWithMetadata } from './utils/imageUtils';
 import { copyToClipboard as copyToClipboardUtil } from './utils/clipboard';
 import { AspectRatio, ImageSize, ReferenceImage, GeneratedImage, Style } from './types';
 import { Timer } from './utils/timer';
 import { getCurrentProjectId, setCurrentProjectId as saveCurrentProjectId } from './utils/localStorage';
 import { Button } from './components/ui/button';
-import { Textarea } from './components/ui/textarea';
 import { Card, CardContent } from './components/ui/card';
-import { Label } from './components/ui/label';
 import { Input } from './components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './components/ui/dialog';
 import { VisuallyHidden } from './components/ui/visually-hidden';
 import { HelpDialog } from './components/HelpDialog';
-import { ExpandablePane } from './components/ExpandablePane';
+import { EditableExpandablePane } from './components/EditableExpandablePane';
 import { ParameterCard } from './components/ParameterCard';
 import { FormField } from './components/FormField';
 import { SimpleSelect } from './components/SimpleSelect';
 import { ModalSection } from './components/ModalSection';
 import { BookmarkButton } from './components/BookmarkButton';
 import { ThumbnailImage } from './components/ThumbnailImage';
+import { DraggableImageGrid } from './components/DraggableImageGrid';
 import { Toaster } from './components/ui/toaster';
 import { useToast } from './components/ui/use-toast';
-import { X, Upload, Download, Loader2, Pencil, Grid3x3, List, Search, Copy, Plus, RotateCcw, Bookmark, BookmarkCheck } from 'lucide-react';
+import { Download, Loader2, Grid3x3, List, Search, Copy, Plus, RotateCcw, Bookmark, BookmarkCheck } from 'lucide-react';
 
 function App() {
   const { toast } = useToast();
@@ -44,7 +43,10 @@ function App() {
   const [generatingElapsedTimes, setGeneratingElapsedTimes] = useState<Map<string, number>>(new Map());
   const [selectedImage, setSelectedImage] = useState<GeneratedImage | null>(null);
   const [selectedThumbnailImage, setSelectedThumbnailImage] = useState<string | null>(null);
-  const [promptPreview, setPromptPreview] = useState<string>('');
+  const [thumbnailImageContext, setThumbnailImageContext] = useState<{
+    type: 'prompt' | 'style' | 'result';
+    index: number;
+  } | null>(null);
   const [helpDialogOpen, setHelpDialogOpen] = useState<{
     prompt: boolean;
     style: boolean;
@@ -56,11 +58,8 @@ function App() {
     settings: false,
     batch: false,
   });
-  const [isPromptEditDialogOpen, setIsPromptEditDialogOpen] = useState<boolean>(false);
-  const [editingPrompt, setEditingPrompt] = useState<string>('');
   const [viewMode, setViewMode] = useState<'large' | 'small'>('large');
   const [viewingImage, setViewingImage] = useState<GeneratedImage | null>(null);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
   const [projects, setProjects] = useState<Project[]>([]);
   const [currentProjectId, setCurrentProjectId] = useState<string>(() => {
     // Restore from localStorage on mount
@@ -245,13 +244,110 @@ function App() {
     }
   }, [currentProjectId]);
 
+
+  // Handle keyboard navigation for images
   useEffect(() => {
-    if (promptText.trim()) {
-      setPromptPreview(previewGachaPrompt(promptText));
-    } else {
-      setPromptPreview('');
-    }
-  }, [promptText]);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only handle arrow keys when a dialog is open
+      if (!selectedThumbnailImage && !selectedImage) return;
+      
+      // Prevent default if we're handling the key
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        
+        if (selectedThumbnailImage && thumbnailImageContext) {
+          // Handle thumbnail image navigation (prompt/style images)
+          const { type, index } = thumbnailImageContext;
+          let images: ReferenceImage[] = [];
+          
+          // Check if we're viewing metadata images
+          if (viewingImage && viewingImage.metadata?.request) {
+            const apiUrl = getApiUrl();
+            if (type === 'prompt' && viewingImage.metadata.request.prompt?.images) {
+              // Use metadata images
+              images = viewingImage.metadata.request.prompt.images.map((filename: string, idx: number) => {
+                const settingsImageUrl = `${apiUrl}/uploads/projects/${currentProjectId}/settings/reference-images/${filename}`;
+                return {
+                  id: `metadata-prompt-${idx}`,
+                  data: settingsImageUrl,
+                  mimeType: 'image/png',
+                  filename,
+                };
+              });
+            } else if (type === 'style' && viewingImage.metadata.request.style?.images) {
+              // Use metadata images
+              images = viewingImage.metadata.request.style.images.map((filename: string, idx: number) => {
+                const settingsImageUrl = `${apiUrl}/uploads/projects/${currentProjectId}/settings/reference-images/${filename}`;
+                return {
+                  id: `metadata-style-${idx}`,
+                  data: settingsImageUrl,
+                  mimeType: 'image/png',
+                  filename,
+                };
+              });
+            }
+          }
+          
+          // Fallback to current images if not viewing metadata
+          if (images.length === 0) {
+            if (type === 'prompt') {
+              images = promptImages;
+            } else if (type === 'style') {
+              images = styleImages;
+            }
+          }
+          
+          if (images.length <= 1) return; // No navigation needed for single image
+          
+          let newIndex = index;
+          if (e.key === 'ArrowLeft') {
+            // Move to previous image (don't loop)
+            if (index > 0) {
+              newIndex = index - 1;
+            }
+          } else if (e.key === 'ArrowRight') {
+            // Move to next image (don't loop)
+            if (index < images.length - 1) {
+              newIndex = index + 1;
+            }
+          }
+          
+          if (newIndex !== index && images[newIndex]) {
+            setSelectedThumbnailImage(images[newIndex].data);
+            setThumbnailImageContext({ type, index: newIndex });
+          }
+        } else if (selectedImage) {
+          // Handle result image navigation
+          const filteredHistory = history.filter(item => !showBookmarkedOnly || item.metadata.bookmarked === true);
+          const currentIndex = filteredHistory.findIndex(img => img.id === selectedImage.id);
+          
+          if (currentIndex === -1 || filteredHistory.length <= 1) return;
+          
+          let newIndex = currentIndex;
+          if (e.key === 'ArrowLeft') {
+            // Move to previous image (don't loop)
+            if (currentIndex > 0) {
+              newIndex = currentIndex - 1;
+            }
+          } else if (e.key === 'ArrowRight') {
+            // Move to next image (don't loop)
+            if (currentIndex < filteredHistory.length - 1) {
+              newIndex = currentIndex + 1;
+            }
+          }
+          
+          if (newIndex !== currentIndex && filteredHistory[newIndex]) {
+            setSelectedImage(filteredHistory[newIndex]);
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedThumbnailImage, thumbnailImageContext, selectedImage, promptImages, styleImages, history, showBookmarkedOnly, viewingImage, currentProjectId]);
 
   // Update viewingImage when history is updated (e.g., when generation completes)
   useEffect(() => {
@@ -505,34 +601,6 @@ function App() {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, target: 'prompt' | 'reference' | 'style' = 'reference') => {
-    const files = e.target.files;
-    if (!files) return;
-    processFiles(files, target);
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent<HTMLLabelElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLLabelElement>, target: 'prompt' | 'reference' | 'style' = 'reference') => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-
-    const files = e.dataTransfer.files;
-    if (files && files.length > 0) {
-      processFiles(files, target);
-    }
-  };
 
   const handleCreateProject = async () => {
     if (!newProjectName.trim()) return;
@@ -594,6 +662,48 @@ function App() {
       }
     }
     setStyleImages((prev) => prev.filter((img) => img.id !== id));
+  };
+
+  /**
+   * Handle prompt images reordering
+   */
+  const handlePromptImagesChange = (newImages: ReferenceImage[]) => {
+    setPromptImages(newImages);
+  };
+
+  /**
+   * Handle prompt images addition
+   */
+  const handlePromptImageAdd = async (files: File[]) => {
+    await processFiles(files, 'prompt');
+  };
+
+  /**
+   * Handle prompt image removal
+   */
+  const handlePromptImageRemove = async (imageId: string) => {
+    await removePromptImage(imageId);
+  };
+
+  /**
+   * Handle style images reordering
+   */
+  const handleStyleImagesChange = (newImages: ReferenceImage[]) => {
+    setStyleImages(newImages);
+  };
+
+  /**
+   * Handle style images addition
+   */
+  const handleStyleImageAdd = async (files: File[]) => {
+    await processFiles(files, 'style');
+  };
+
+  /**
+   * Handle style image removal
+   */
+  const handleStyleImageRemove = async (imageId: string) => {
+    await removeStyleImage(imageId);
   };
 
 
@@ -702,10 +812,11 @@ function App() {
       }
 
       const processedPrompt = parseGachaPrompt(promptText);
+      const processedStyleText = styleText.trim() ? parseGachaPrompt(styleText.trim()) : undefined;
       const style: Style | undefined = 
-        (styleText.trim() || styleImages.length > 0)
+        (processedStyleText || styleImages.length > 0)
           ? {
-              text: styleText.trim() || undefined,
+              text: processedStyleText || undefined,
               images: styleImages.length > 0 ? styleImages : undefined,
             }
           : undefined;
@@ -1065,80 +1176,59 @@ function App() {
               contentClassName="space-y-4"
             >
                 <FormField label="Text">
-                  <ExpandablePane
-                    initialHeight={120}
-                    minHeight={80}
-                    maxHeight={600}
-                    className="relative"
-                  >
-                    <Textarea
-                      value={promptText}
-                      onChange={(e) => setPromptText(e.target.value)}
-                      placeholder="Describe the image you want to generate...&#10;Example: a beautiful {{cat,dog,bird}}(2) in the garden"
-                      className="resize-none font-mono text-sm pr-10 h-full"
-                    />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute bottom-2 right-2 h-8 w-8 text-muted-foreground hover:text-foreground z-10"
-                      onClick={() => {
-                        setEditingPrompt(promptText);
-                        setIsPromptEditDialogOpen(true);
-                      }}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                  </ExpandablePane>
-                  {promptPreview && promptPreview !== promptText && (
-                    <div className="p-3 bg-muted rounded-md border border-dashed">
-                      <p className="text-xs text-muted-foreground mb-1">Preview:</p>
-                      <p className="text-sm font-mono">{promptPreview}</p>
-                    </div>
-                  )}
+                  <EditableExpandablePane
+                    value={promptText}
+                    onChange={setPromptText}
+                    onSave={async (newPrompt) => {
+                      try {
+                        const promptImageFilenames = promptImages.map(img => img.filename || '').filter(Boolean);
+                        const referenceImageFilenames = refImages.map(img => img.filename || '').filter(Boolean);
+                        const styleImageFilenames = styleImages.map(img => img.filename || '').filter(Boolean);
+                        const success = await saveProjectSettings(currentProjectId, {
+                          prompt: newPrompt,
+                          aspectRatio,
+                          imageSize,
+                          batchCount,
+                          promptImageFilenames: promptImageFilenames.length > 0 ? promptImageFilenames : undefined,
+                          referenceImageFilenames,
+                          styleText: styleText.trim() || undefined,
+                          styleImageFilenames: styleImageFilenames.length > 0 ? styleImageFilenames : undefined,
+                        });
+                        
+                        if (success) {
+                          toast({
+                            description: "Prompt settings saved.",
+                          });
+                        } else {
+                          throw new Error('Failed to save settings');
+                        }
+                      } catch (error) {
+                        console.warn('Failed to save prompt settings:', error);
+                        toast({
+                          variant: "destructive",
+                          description: "Failed to save prompt settings.",
+                        });
+                      }
+                    }}
+                    placeholder="Describe the image you want to generate...&#10;Example: a beautiful {{cat,dog,bird}}(2) in the garden"
+                    dialogTitle="Edit Prompt"
+                    dialogDescription="Edit your prompt in a larger area"
+                    parseGacha={parseGachaPrompt}
+                    keepOpenOnSave={true}
+                  />
                 </FormField>
                 <FormField label="Images">
-                  <div className="grid grid-cols-3 gap-2">
-                    {promptImages.map((img) => (
-                      <div key={img.id} className="relative bg-muted aspect-square group cursor-pointer" onClick={() => setSelectedThumbnailImage(img.data)}>
-                        <img 
-                          src={img.data} 
-                          alt="Prompt" 
-                          className="w-full h-full object-contain rounded-md border"
-                        />
-                        <Button
-                          variant="destructive"
-                          size="icon"
-                          className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removePromptImage(img.id);
-                          }}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    ))}
-                    <label 
-                      className={`aspect-square border-2 border-dashed rounded-md flex flex-col items-center justify-center cursor-pointer transition-colors ${
-                        isDragging 
-                          ? 'bg-accent border-primary border-solid' 
-                          : 'hover:bg-accent'
-                      }`}
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={(e) => handleDrop(e, 'prompt')}
-                    >
-                      <Upload className="h-6 w-6 mb-1 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground">UPLOAD</span>
-                      <input 
-                        type="file" 
-                        multiple 
-                        accept="image/*" 
-                        onChange={(e) => handleFileChange(e, 'prompt')} 
-                        className="hidden" 
-                      />
-                    </label>
-                  </div>
+                  <DraggableImageGrid
+                    images={promptImages}
+                    imageType="prompt"
+                    onImagesChange={handlePromptImagesChange}
+                    onImageAdd={handlePromptImageAdd}
+                    onImageRemove={handlePromptImageRemove}
+                    onImageClick={(url, index) => {
+                      setSelectedThumbnailImage(url);
+                      setThumbnailImageContext({ type: 'prompt', index });
+                    }}
+                  />
                 </FormField>
             </ParameterCard>
 
@@ -1150,63 +1240,58 @@ function App() {
               contentClassName="space-y-4"
             >
                 <FormField label="Text">
-                  <ExpandablePane
-                    initialHeight={120}
-                    minHeight={80}
-                    maxHeight={600}
-                    className="relative"
-                  >
-                    <Textarea
-                      value={styleText}
-                      onChange={(e) => setStyleText(e.target.value)}
-                      placeholder="Describe the style you want to reference..."
-                      className="resize-none font-mono text-sm h-full"
-                    />
-                  </ExpandablePane>
+                  <EditableExpandablePane
+                    value={styleText}
+                    onChange={setStyleText}
+                    onSave={async (newStyle) => {
+                      try {
+                        const promptImageFilenames = promptImages.map(img => img.filename || '').filter(Boolean);
+                        const referenceImageFilenames = refImages.map(img => img.filename || '').filter(Boolean);
+                        const styleImageFilenames = styleImages.map(img => img.filename || '').filter(Boolean);
+                        const success = await saveProjectSettings(currentProjectId, {
+                          prompt: promptText,
+                          aspectRatio,
+                          imageSize,
+                          batchCount,
+                          promptImageFilenames: promptImageFilenames.length > 0 ? promptImageFilenames : undefined,
+                          referenceImageFilenames,
+                          styleText: newStyle.trim() || undefined,
+                          styleImageFilenames: styleImageFilenames.length > 0 ? styleImageFilenames : undefined,
+                        });
+                        
+                        if (success) {
+                          toast({
+                            description: "Style reference settings saved.",
+                          });
+                        } else {
+                          throw new Error('Failed to save settings');
+                        }
+                      } catch (error) {
+                        console.warn('Failed to save style reference settings:', error);
+                        toast({
+                          variant: "destructive",
+                          description: "Failed to save style reference settings.",
+                        });
+                      }
+                    }}
+                    placeholder="Describe the style you want to reference...&#10;Example: {{watercolor,oil painting,digital art}}(1) style"
+                    dialogTitle="Edit Style Reference"
+                    dialogDescription="Edit your style reference in a larger area"
+                    parseGacha={parseGachaPrompt}
+                  />
                 </FormField>
                 <FormField label="Images">
-                  <div className="grid grid-cols-3 gap-2">
-                    {styleImages.map((img) => (
-                      <div key={img.id} className="relative bg-muted aspect-square group cursor-pointer" onClick={() => setSelectedThumbnailImage(img.data)}>
-                        <img 
-                          src={img.data} 
-                          alt="Style Reference" 
-                          className="w-full h-full object-contain rounded-md border"
-                        />
-                        <Button
-                          variant="destructive"
-                          size="icon"
-                          className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removeStyleImage(img.id);
-                          }}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    ))}
-                    <label 
-                      className={`aspect-square border-2 border-dashed rounded-md flex flex-col items-center justify-center cursor-pointer transition-colors ${
-                        isDragging 
-                          ? 'bg-accent border-primary border-solid' 
-                          : 'hover:bg-accent'
-                      }`}
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={(e) => handleDrop(e, 'style')}
-                    >
-                      <Upload className="h-6 w-6 mb-1 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground">UPLOAD</span>
-                      <input 
-                        type="file" 
-                        multiple 
-                        accept="image/*" 
-                        onChange={(e) => handleFileChange(e, 'style')} 
-                        className="hidden" 
-                      />
-                    </label>
-                  </div>
+                  <DraggableImageGrid
+                    images={styleImages}
+                    imageType="style"
+                    onImagesChange={handleStyleImagesChange}
+                    onImageAdd={handleStyleImageAdd}
+                    onImageRemove={handleStyleImageRemove}
+                    onImageClick={(url, index) => {
+                      setSelectedThumbnailImage(url);
+                      setThumbnailImageContext({ type: 'style', index });
+                    }}
+                  />
                 </FormField>
             </ParameterCard>
 
@@ -1357,7 +1442,12 @@ function App() {
                       <div className="space-y-4">
                         <div className="relative group">
                           <div className="w-full max-h-[500px] flex items-center justify-center bg-muted rounded-lg border overflow-hidden min-h-[300px]"
-                               onClick={() => !item.isGenerating && setSelectedImage(item)}>
+                               onClick={() => {
+                                 if (!item.isGenerating) {
+                                   setSelectedImage(item);
+                                   setThumbnailImageContext(null); // Clear thumbnail context when selecting result image
+                                 }
+                               }}>
                             {item.isGenerating || !item.url ? (
                               <div className="flex flex-col items-center justify-center">
                                 <Loader2 className="h-12 w-12 animate-spin text-muted-foreground mb-4" />
@@ -1443,7 +1533,12 @@ function App() {
                   <div
                     key={item.id}
                     className="relative w-[200px] h-[200px] rounded-lg border overflow-hidden bg-muted flex-shrink-0 group"
-                    onClick={() => !item.isGenerating && setSelectedImage(item)}
+                    onClick={() => {
+                      if (!item.isGenerating) {
+                        setSelectedImage(item);
+                        setThumbnailImageContext(null); // Clear thumbnail context when selecting result image
+                      }
+                    }}
                   >
                     {item.isGenerating || !item.url ? (
                       <div className="w-full h-full flex flex-col items-center justify-center">
@@ -1524,6 +1619,20 @@ function App() {
                   className="max-w-full max-h-[85vh] object-contain rounded-lg"
                   style={{ objectFit: 'contain' }}
                 />
+                {/* Image ID overlay - bottom left */}
+                <div className="absolute bottom-4 left-4">
+                  <p 
+                    className="text-xs uppercase tracking-wider text-muted-foreground cursor-pointer hover:text-foreground transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      copyToClipboard(selectedImage.id, "Image ID copied to clipboard.");
+                    }}
+                    title="Click to copy image ID"
+                  >
+                    #{selectedImage.id}
+                  </p>
+                </div>
+                {/* Action buttons - bottom right */}
                 <div className="absolute bottom-4 right-4 flex items-center gap-2">
                   <Button
                     variant="outline"
@@ -1561,87 +1670,18 @@ function App() {
         </DialogContent>
       </Dialog>
 
-      {/* Prompt Edit Dialog */}
-      <Dialog open={isPromptEditDialogOpen} onOpenChange={setIsPromptEditDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh]">
-          <DialogHeader>
-            <DialogTitle>Edit Prompt</DialogTitle>
-            <DialogDescription>
-              Edit your prompt in a larger area
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <Textarea
-              value={editingPrompt}
-              onChange={(e) => setEditingPrompt(e.target.value)}
-              placeholder="生成したい画像を説明してください...&#10;例: a beautiful {{cat,dog,bird}}(2) in the garden"
-              className="min-h-[400px] resize-none font-mono text-sm"
-            />
-            {editingPrompt && previewGachaPrompt(editingPrompt) !== editingPrompt && (
-              <div className="p-3 bg-muted rounded-md border border-dashed">
-                <p className="text-xs text-muted-foreground mb-1">プレビュー:</p>
-                <p className="text-sm font-mono">{previewGachaPrompt(editingPrompt)}</p>
-              </div>
-            )}
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsPromptEditDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              onClick={async () => {
-                setPromptText(editingPrompt);
-                setIsPromptEditDialogOpen(false);
-
-                try {
-                  const promptImageFilenames = promptImages.map(img => img.filename || '').filter(Boolean);
-                  const referenceImageFilenames = refImages.map(img => img.filename || '').filter(Boolean);
-                  const styleImageFilenames = styleImages.map(img => img.filename || '').filter(Boolean);
-                  const success = await saveProjectSettings(currentProjectId, {
-                    prompt: editingPrompt,
-                    aspectRatio,
-                    imageSize,
-                    batchCount,
-                    promptImageFilenames: promptImageFilenames.length > 0 ? promptImageFilenames : undefined,
-                    referenceImageFilenames,
-                    styleText: styleText.trim() || undefined,
-                    styleImageFilenames: styleImageFilenames.length > 0 ? styleImageFilenames : undefined,
-                  });
-                  
-                  if (success) {
-                    toast({
-                      description: "Prompt settings saved.",
-                    });
-                  } else {
-                    throw new Error('Failed to save settings');
-                  }
-                } catch (error) {
-                  console.warn('Failed to save prompt settings:', error);
-                  toast({
-                    variant: "destructive",
-                    description: "Failed to save prompt settings.",
-                  });
-                }
-              }}
-            >
-              Save
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       {/* Create Project Dialog */}
       <Dialog open={isCreateProjectDialogOpen} onOpenChange={setIsCreateProjectDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-h-[90vh] flex flex-col">
           <DialogHeader>
             <DialogTitle>Create New Project</DialogTitle>
             <DialogDescription>
               Enter a name for the new project
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="project-name">Project Name</Label>
+          <div className="space-y-4 py-4 overflow-y-auto flex-1 min-h-0 px-1">
+            <FormField label="Project Name" htmlFor="project-name">
               <Input
                 id="project-name"
                 type="text"
@@ -1654,7 +1694,7 @@ function App() {
                   }
                 }}
               />
-            </div>
+            </FormField>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => {
@@ -1788,11 +1828,11 @@ function App() {
 
       {/* Prompt View Dialog */}
       <Dialog open={viewingImage !== null} onOpenChange={(open) => !open && setViewingImage(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh]">
+        <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col">
           <DialogHeader>
             <DialogTitle>Generation Parameters</DialogTitle>
           </DialogHeader>
-          <div className="py-4 overflow-y-auto border border-border rounded-md p-4 max-h-[60vh] space-y-3">
+          <div className="py-4 overflow-y-auto flex-1 min-h-0 space-y-3 px-1">
             {viewingImage && (
               <>
                 {/* Prompt */}
@@ -1823,7 +1863,14 @@ function App() {
                                   initialUrl={settingsImageUrl}
                                   fallbackUrl={outputsImageUrl}
                                   alt={`Prompt Image ${index + 1}`}
-                                  onImageClick={setSelectedThumbnailImage}
+                                  onImageClick={(url) => {
+                                    setSelectedThumbnailImage(url);
+                                    // Use metadata images for navigation context
+                                    setThumbnailImageContext({ 
+                                      type: 'prompt', 
+                                      index 
+                                    });
+                                  }}
                                 />
                               );
                             })}
@@ -1858,7 +1905,14 @@ function App() {
                                   initialUrl={settingsImageUrl}
                                   fallbackUrl={outputsImageUrl}
                                   alt={`Style Reference Image ${index + 1}`}
-                                  onImageClick={setSelectedThumbnailImage}
+                                  onImageClick={(url) => {
+                                    setSelectedThumbnailImage(url);
+                                    // Use metadata images for navigation context
+                                    setThumbnailImageContext({ 
+                                      type: 'style', 
+                                      index 
+                                    });
+                                  }}
                                 />
                               );
                             })}
@@ -1949,7 +2003,12 @@ function App() {
       </Dialog>
 
       {/* Thumbnail Image Preview Dialog */}
-      <Dialog open={selectedThumbnailImage !== null} onOpenChange={(open) => !open && setSelectedThumbnailImage(null)}>
+      <Dialog open={selectedThumbnailImage !== null} onOpenChange={(open) => {
+        if (!open) {
+          setSelectedThumbnailImage(null);
+          setThumbnailImageContext(null);
+        }
+      }}>
         <DialogContent className="max-w-[90vw] max-h-[90vh] p-0">
           <VisuallyHidden>
             <DialogTitle>Thumbnail Preview</DialogTitle>
