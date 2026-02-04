@@ -123,18 +123,20 @@ export const EditableExpandablePane: React.FC<EditableExpandablePaneProps> = ({
               />
             )}
           </div>
-          <DialogFooter>
+          <DialogFooter className="justify-between">
             {parseGacha && (
               <Button variant="outline" onClick={handleDryRun}>
                 Dry Run
               </Button>
             )}
-            <Button variant="outline" onClick={() => handleCloseDialog(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleSave}>
-              Save
-            </Button>
+            <div className="flex gap-2 ml-auto">
+              <Button variant="outline" onClick={() => handleCloseDialog(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSave}>
+                Save
+              </Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>
