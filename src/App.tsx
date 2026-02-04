@@ -887,6 +887,32 @@ function App() {
       // Add new images to history
       setHistory((prev) => [...newImages, ...prev]);
 
+      // Smooth scroll to top
+      const scrollToTop = () => {
+        const startPosition = window.pageYOffset;
+        const startTime = performance.now();
+        const duration = 500; // 0.5 seconds
+
+        const animateScroll = (currentTime: number) => {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          
+          // Ease-out function for smooth deceleration
+          const easeOut = 1 - Math.pow(1 - progress, 3);
+          const currentPosition = startPosition * (1 - easeOut);
+          
+          window.scrollTo(0, currentPosition);
+          
+          if (progress < 1) {
+            requestAnimationFrame(animateScroll);
+          }
+        };
+        
+        requestAnimationFrame(animateScroll);
+      };
+      
+      scrollToTop();
+
       // Save project settings
       try {
         const promptImageFilenames = promptImages.map(img => img.filename || '').filter(Boolean);
@@ -1852,7 +1878,7 @@ function App() {
                       {viewingImage.metadata.request.prompt.images && viewingImage.metadata.request.prompt.images.length > 0 && (
                         <div>
                           <p className="text-xs text-muted-foreground mb-2">Images</p>
-                          <div className="grid grid-cols-3 gap-2">
+                          <div className="grid grid-cols-3 gap-2 justify-items-start">
                             {viewingImage.metadata.request.prompt.images.map((filename: string, index: number) => {
                               const apiUrl = getApiUrl();
                               const settingsImageUrl = `${apiUrl}/uploads/projects/${currentProjectId}/settings/reference-images/${filename}`;
@@ -1894,7 +1920,7 @@ function App() {
                       {viewingImage.metadata.request.style.images && viewingImage.metadata.request.style.images.length > 0 && (
                         <div>
                           <p className="text-xs text-muted-foreground mb-2">Images</p>
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-wrap gap-2 justify-start">
                             {viewingImage.metadata.request.style.images.map((filename: string, index: number) => {
                               const apiUrl = getApiUrl();
                               const settingsImageUrl = `${apiUrl}/uploads/projects/${currentProjectId}/settings/reference-images/${filename}`;
