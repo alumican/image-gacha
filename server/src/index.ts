@@ -919,6 +919,48 @@ app.post('/api/projects/:projectId/images/:imageId/bookmark', async (req, res) =
 });
 
 /**
+ * Update memo for an image
+ * POST /api/projects/:projectId/images/:imageId/memo
+ * Body: { memo: string }
+ */
+app.post('/api/projects/:projectId/images/:imageId/memo', async (req, res) => {
+  try {
+    const { projectId, imageId } = req.params;
+    const { memo } = req.body;
+    
+    if (typeof memo !== 'string') {
+      return res.status(400).json({ error: 'memo must be a string' });
+    }
+    
+    const projectDir = path.join(projectsDir, projectId);
+    const generatedImagesDir = path.join(projectDir, 'outputs', 'generated-images');
+    const jsonPath = path.join(generatedImagesDir, `${imageId}.json`);
+    
+    // Check if JSON file exists
+    try {
+      await fs.access(jsonPath);
+    } catch {
+      return res.status(404).json({ error: 'Image metadata not found' });
+    }
+    
+    // Read existing metadata
+    const metadataContent = await fs.readFile(jsonPath, 'utf-8');
+    const metadata = JSON.parse(metadataContent);
+    
+    // Update memo
+    metadata.memo = memo;
+    
+    // Write back to file
+    await fs.writeFile(jsonPath, JSON.stringify(metadata, null, 2));
+    
+    res.json({ success: true, memo });
+  } catch (error: any) {
+    console.error('Update memo error:', error);
+    res.status(500).json({ error: error.message || 'Internal server error' });
+  }
+});
+
+/**
  * Serve uploaded files
  * GET /uploads/projects/:projectId/outputs/:filename
  * GET /uploads/projects/:projectId/reference-images/:filename

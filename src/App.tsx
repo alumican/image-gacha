@@ -4,7 +4,7 @@ import { createMetadataOnServer, updateImageOnServer } from './services/uploadSe
 import { fetchGeneratedImages } from './services/fetchService';
 import { getProjects, createProject, getProjectSettings, saveProjectSettings, uploadReferenceImageForSettings, uploadReferenceImageForOutputs, deleteReferenceImageFromSettings, copyReferenceImagesFromOutputsToSettings, Project } from './services/projectService';
 import { parseGachaPrompt } from './utils/gachaParser';
-import { convertImageToFile, getApiUrl, downloadImage, downloadImageWithMetadata } from './utils/imageUtils';
+import { convertImageToFile, getApiUrl, downloadImage } from './utils/imageUtils';
 import { copyToClipboard as copyToClipboardUtil } from './utils/clipboard';
 import { AspectRatio, ImageSize, ReferenceImage, GeneratedImage, Style } from './types';
 import { Timer } from './utils/timer';
@@ -21,11 +21,13 @@ import { FormField } from './components/FormField';
 import { SimpleSelect } from './components/SimpleSelect';
 import { ModalSection } from './components/ModalSection';
 import { BookmarkButton } from './components/BookmarkButton';
+import { MemoButton } from './components/MemoButton';
 import { ThumbnailImage } from './components/ThumbnailImage';
 import { DraggableImageGrid } from './components/DraggableImageGrid';
+import { MemoEditModal } from './components/MemoEditModal';
 import { Toaster } from './components/ui/toaster';
 import { useToast } from './components/ui/use-toast';
-import { Download, Loader2, Grid3x3, List, Search, Copy, Plus, RotateCcw, Bookmark, BookmarkCheck } from 'lucide-react';
+import { Download, Loader2, Grid3x3, Grid2x2, List, Search, Copy, Plus, RotateCcw, Bookmark, BookmarkCheck, Pencil } from 'lucide-react';
 
 function App() {
   const { toast } = useToast();
@@ -58,7 +60,7 @@ function App() {
     settings: false,
     batch: false,
   });
-  const [viewMode, setViewMode] = useState<'large' | 'small'>('large');
+  const [viewMode, setViewMode] = useState<'large' | 'small' | 'list'>('large');
   const [viewingImage, setViewingImage] = useState<GeneratedImage | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [currentProjectId, setCurrentProjectId] = useState<string>(() => {
@@ -68,6 +70,8 @@ function App() {
   const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] = useState<boolean>(false);
   const [newProjectName, setNewProjectName] = useState<string>('');
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState<boolean>(false);
+  const [showMemoOnly, setShowMemoOnly] = useState<boolean>(false);
+  const [memoEditImage, setMemoEditImage] = useState<GeneratedImage | null>(null);
 
   /**
    * Copy text to clipboard and show toast notification
@@ -122,6 +126,60 @@ function App() {
         variant: "destructive",
         description: "Failed to save bookmark status.",
       });
+    }
+  };
+
+  /**
+   * Save memo for an image
+   */
+  const handleSaveMemo = async (imageId: string, memo: string) => {
+    try {
+      const apiUrl = getApiUrl();
+      const response = await fetch(`${apiUrl}/api/projects/${currentProjectId}/images/${imageId}/memo`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ memo }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update memo');
+      }
+      
+      // Update local state
+      const image = history.find(img => img.id === imageId);
+      if (image) {
+        const updatedImage = { 
+          ...image, 
+          metadata: { 
+            ...image.metadata, 
+            memo 
+          } 
+        };
+        setHistory(prev => prev.map(img => 
+          img.id === imageId ? updatedImage : img
+        ));
+        
+        if (selectedImage && selectedImage.id === imageId) {
+          setSelectedImage(updatedImage);
+        }
+        
+        if (viewingImage && viewingImage.id === imageId) {
+          setViewingImage(updatedImage);
+        }
+      }
+      
+      toast({
+        description: "Memo saved successfully.",
+      });
+    } catch (error) {
+      console.error('Failed to save memo on server:', error);
+      toast({
+        variant: "destructive",
+        description: "Failed to save memo.",
+      });
+      throw error;
     }
   };
 
@@ -318,7 +376,11 @@ function App() {
           }
         } else if (selectedImage) {
           // Handle result image navigation
-          const filteredHistory = history.filter(item => !showBookmarkedOnly || item.metadata.bookmarked === true);
+          const filteredHistory = history.filter(item => {
+            if (showBookmarkedOnly && !item.metadata.bookmarked) return false;
+            if (showMemoOnly && !item.metadata?.memo) return false;
+            return true;
+          });
           const currentIndex = filteredHistory.findIndex(img => img.id === selectedImage.id);
           
           if (currentIndex === -1 || filteredHistory.length <= 1) return;
@@ -347,7 +409,7 @@ function App() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [selectedThumbnailImage, thumbnailImageContext, selectedImage, promptImages, styleImages, history, showBookmarkedOnly, viewingImage, currentProjectId]);
+  }, [selectedThumbnailImage, thumbnailImageContext, selectedImage, promptImages, styleImages, history, showBookmarkedOnly, showMemoOnly, viewingImage, currentProjectId]);
 
   // Update viewingImage when history is updated (e.g., when generation completes)
   useEffect(() => {
@@ -963,17 +1025,27 @@ function App() {
   };
 
   /**
-   * Download image with metadata wrapper with error handling and toast notification
+   * Download JSON metadata file for an image
    */
-  const handleDownloadImageWithMetadata = async (image: GeneratedImage) => {
+  const handleDownloadJson = async (image: GeneratedImage) => {
     try {
-      await downloadImageWithMetadata(image);
+      if (!image.metadata) {
+        return;
+      }
+      
+      const baseFilename = `gemini-gen-${image.id}`;
+      const jsonData = JSON.stringify(image.metadata, null, 2);
+      const jsonBlob = new Blob([jsonData], { type: 'application/json' });
+      const jsonUrl = URL.createObjectURL(jsonBlob);
+      const jsonLink = document.createElement('a');
+      jsonLink.href = jsonUrl;
+      jsonLink.download = `${baseFilename}.json`;
+      document.body.appendChild(jsonLink);
+      jsonLink.click();
+      document.body.removeChild(jsonLink);
+      URL.revokeObjectURL(jsonUrl);
     } catch (error) {
-      console.error('Failed to download image:', error);
-      toast({
-        variant: "destructive",
-        description: "Failed to download image.",
-      });
+      console.error('Failed to download JSON:', error);
     }
   };
 
@@ -1400,13 +1472,21 @@ function App() {
           <main className="flex-1 space-y-8 min-w-0">
             {/* View controls */}
             {history.length > 0 && (
-              <div className="flex items-center justify-between gap-4 pb-4 border-b">
-                <div className="flex items-center gap-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1 border rounded-md p-1">
                     <Button
                       variant={viewMode === 'large' ? 'default' : 'ghost'}
                       size="sm"
                       onClick={() => setViewMode('large')}
+                      className="h-8"
+                    >
+                      <Grid2x2 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant={viewMode === 'list' ? 'default' : 'ghost'}
+                      size="sm"
+                      onClick={() => setViewMode('list')}
                       className="h-8"
                     >
                       <List className="h-4 w-4" />
@@ -1428,9 +1508,22 @@ function App() {
                     title={showBookmarkedOnly ? "Show all images" : "Show bookmarked only"}
                   >
                     {showBookmarkedOnly ? (
-                      <BookmarkCheck className="h-4 w-4 fill-current" />
+                      <BookmarkCheck className="h-4 w-4 fill-current stroke-none" />
                     ) : (
                       <Bookmark className="h-4 w-4" />
+                    )}
+                  </Button>
+                  <Button
+                    variant={showMemoOnly ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setShowMemoOnly(!showMemoOnly)}
+                    className="h-8"
+                    title={showMemoOnly ? "Show all images" : "Show memo only"}
+                  >
+                    {showMemoOnly ? (
+                      <Pencil className="h-4 w-4 fill-current stroke-none" />
+                    ) : (
+                      <Pencil className="h-4 w-4" />
                     )}
                   </Button>
                 </div>
@@ -1447,6 +1540,12 @@ function App() {
                     </div>
                   </CardContent>
                 </Card>
+              ) : viewMode === 'list' ? (
+                <div className="w-full flex items-center justify-center text-muted-foreground py-12">
+                  <p className="text-sm uppercase tracking-wider">
+                    No images generated yet
+                  </p>
+                </div>
               ) : (
                 <div className="flex flex-wrap gap-4">
                   <div className="w-[200px] h-[200px] rounded-lg border overflow-hidden bg-muted flex items-center justify-center flex-shrink-0">
@@ -1460,7 +1559,11 @@ function App() {
 
             <div className="flex flex-wrap gap-4">
               {history
-                .filter(item => !showBookmarkedOnly || item.metadata.bookmarked === true)
+                .filter(item => {
+                  if (showBookmarkedOnly && !item.metadata.bookmarked) return false;
+                  if (showMemoOnly && !item.metadata?.memo) return false;
+                  return true;
+                })
                 .map((item, idx) => (
                 viewMode === 'large' ? (
                   <Card key={item.id} className="w-full max-w-2xl">
@@ -1515,6 +1618,11 @@ function App() {
                               </span>
                             </div>
                             <p className="text-sm leading-relaxed line-clamp-3">{item.prompt}</p>
+                            {item.metadata?.memo && (
+                              <p className="text-xs text-muted-foreground mt-2 leading-relaxed line-clamp-2">
+                                {item.metadata.memo}
+                              </p>
+                            )}
                           </div>
                           <div className="flex flex-col items-end gap-2 shrink-0">
                             <div className="grid grid-cols-2 gap-2">
@@ -1525,14 +1633,11 @@ function App() {
                               >
                                 <Search className="h-4 w-4" />
                               </Button>
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() => handleDownloadImageWithMetadata(item)}
+                              <MemoButton
+                                image={item}
+                                onClick={setMemoEditImage}
                                 disabled={item.isGenerating || !item.url}
-                              >
-                                <Download className="h-4 w-4" />
-                              </Button>
+                              />
                               <BookmarkButton
                                 image={item}
                                 onToggle={toggleBookmark}
@@ -1555,6 +1660,115 @@ function App() {
                       </div>
                     </CardContent>
                   </Card>
+                ) : viewMode === 'list' ? (
+                  <div
+                    key={item.id}
+                    className="w-full flex items-center gap-4"
+                  >
+                    {/* Thumbnail */}
+                    <div 
+                      className="relative flex-shrink-0 w-[240px] max-h-[240px] flex items-center justify-center bg-muted rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={() => {
+                        if (!item.isGenerating) {
+                          setSelectedImage(item);
+                          setThumbnailImageContext(null);
+                        }
+                      }}
+                    >
+                      {item.isGenerating || !item.url ? (
+                        <div className="flex flex-col items-center justify-center py-8">
+                          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-2" />
+                          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+                            Generating...
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {generatingElapsedTimes.get(item.id) || 0}s
+                          </p>
+                        </div>
+                      ) : (
+                        <img 
+                          src={item.url} 
+                          alt={`Generated ${idx}`} 
+                          className="max-w-full max-h-[250px] object-contain"
+                          style={{ objectFit: 'contain' }}
+                        />
+                      )}
+                    </div>
+
+                    <div className="flex-1 flex items-center gap-8">
+                      {/* ID and Prompt and buttons */}
+                      <div className="flex-3 min-w-0 space-y-1">
+                        <div>
+                          <p 
+                            className="text-xs uppercase tracking-wider text-muted-foreground cursor-pointer hover:text-foreground transition-colors"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              copyToClipboard(item.id, "ID copied to clipboard.");
+                            }}
+                          >
+                            #{item.id}
+                          </p>
+                          <span className="text-xs text-muted-foreground">
+                            {item.isGenerating 
+                              ? (generatingElapsedTimes.get(item.id) || 0) + 's'
+                              : (item.generationTime !== undefined ? Math.round(item.generationTime / 1000) + 's' : '0s')
+                            }
+                          </span>
+                        </div>
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap line-clamp-5 mb-2">{item.prompt}</p>
+                        {/* Buttons */}
+                        <div className="flex flex-row items-start gap-2 shrink-0">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => setViewingImage(item)}
+                          >
+                            <Search className="h-4 w-4" />
+                          </Button>
+                          <MemoButton
+                            image={item}
+                            onClick={setMemoEditImage}
+                            disabled={item.isGenerating || !item.url}
+                          />
+                          <BookmarkButton
+                            image={item}
+                            onToggle={toggleBookmark}
+                            disabled={item.isGenerating || !item.url}
+                          />
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              restoreParametersFromImage(item);
+                            }}
+                            title="Restore parameters"
+                          >
+                            <RotateCcw className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Memo */}
+                      <div className="flex-2 min-w-0">
+                        {item.metadata?.memo ? (
+                          <p className="text-sm leading-relaxed whitespace-pre-wrap line-clamp-5">
+                            {item.metadata.memo}
+                          </p>
+                        ) : (
+                          <p 
+                            className="text-sm text-muted-foreground/50 cursor-pointer hover:text-muted-foreground transition-colors"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setMemoEditImage(item);
+                            }}
+                          >
+                            No memo
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <div
                     key={item.id}
@@ -1584,6 +1798,37 @@ function App() {
                           className="w-full h-full object-contain cursor-pointer hover:opacity-90 transition-opacity"
                           style={{ objectFit: 'contain' }}
                         />
+                        {/* Memo: Show filled icon if memo exists, otherwise show on hover */}
+                        {item.metadata?.memo ? (
+                          <div className="absolute bottom-2 left-2">
+                            <button
+                              className="p-1.5 rounded-full hover:bg-background/20 transition-colors"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setMemoEditImage(item);
+                              }}
+                              title="Edit memo"
+                            >
+                              <Pencil className="h-4 w-4 fill-black stroke-none stroke-none" />
+                            </button>
+                          </div>
+                        ) : (
+                          /* No memo: Show overlay button on hover */
+                          <div className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="h-7 w-7 bg-background/90 backdrop-blur-sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setMemoEditImage(item);
+                              }}
+                              title="Add memo"
+                            >
+                              <Pencil className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                        )}
                         {/* Bookmarked: Always show borderless icon */}
                         {item.metadata.bookmarked ? (
                           <div className="absolute bottom-2 right-2">
@@ -1595,7 +1840,7 @@ function App() {
                               }}
                               title="Remove bookmark"
                             >
-                              <BookmarkCheck className="h-4 w-4 fill-current text-foreground" />
+                              <BookmarkCheck className="h-4 w-4 fill-orange-500 stroke-none stroke-none" />
                             </button>
                           </div>
                         ) : (
@@ -1674,6 +1919,10 @@ function App() {
                   >
                     <Download className="h-4 w-4" />
                   </Button>
+                  <MemoButton
+                    image={selectedImage}
+                    onClick={setMemoEditImage}
+                  />
                   <BookmarkButton
                     image={selectedImage}
                     onToggle={toggleBookmark}
@@ -2021,6 +2270,25 @@ function App() {
             >
               <Copy className="h-4 w-4" />
             </Button>
+            {viewingImage && (
+              <MemoButton
+                image={viewingImage}
+                onClick={setMemoEditImage}
+              />
+            )}
+            {viewingImage && (
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDownloadJson(viewingImage);
+                }}
+                title="Download JSON"
+              >
+                <Download className="h-4 w-4" />
+              </Button>
+            )}
             <Button variant="outline" onClick={() => setViewingImage(null)}>
               Close
             </Button>
@@ -2066,6 +2334,22 @@ function App() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Memo Edit Modal */}
+      <MemoEditModal
+        open={memoEditImage !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setMemoEditImage(null);
+          }
+        }}
+        memo={memoEditImage?.metadata?.memo || ''}
+        onSave={async (memo) => {
+          if (memoEditImage) {
+            await handleSaveMemo(memoEditImage.id, memo);
+          }
+        }}
+      />
 
       {/* Toaster */}
       <Toaster />

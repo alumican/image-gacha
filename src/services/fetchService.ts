@@ -41,6 +41,7 @@ export const fetchGeneratedImages = async (projectId: string = 'default'): Promi
           response: file.metadata.response || undefined,
           generationTime: file.metadata.generationTime || file.generationTime || 0,
           bookmarked: file.metadata.bookmarked === true,
+          memo: file.metadata.memo || '',
         };
         
         const promptText = metadata.request.prompt.text || file.prompt || '';

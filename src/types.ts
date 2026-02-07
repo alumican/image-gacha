@@ -43,6 +43,7 @@ export interface GeneratedImage {
     };
     generationTime?: number; // Generation time in milliseconds
     bookmarked: boolean; // Bookmark status
+    memo?: string; // Memo text
   };
 }
 
