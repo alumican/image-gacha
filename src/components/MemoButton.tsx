@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button } from './ui/button';
-import { Bookmark, BookmarkCheck } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import { GeneratedImage } from '../types';
 
-interface BookmarkButtonProps {
+interface MemoButtonProps {
   image: GeneratedImage;
-  onToggle: (imageId: string) => void;
+  onClick: (image: GeneratedImage) => void;
   size?: 'default' | 'sm' | 'lg' | 'icon';
   variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
   className?: string;
@@ -13,18 +13,18 @@ interface BookmarkButtonProps {
 }
 
 /**
- * Bookmark button component that displays bookmark status and handles toggle
- * Shows BookmarkCheck icon when bookmarked, Bookmark icon when not
+ * Memo button component that displays memo status and handles click
+ * Shows filled Pencil icon when memo exists, Pencil icon when not
  */
-export const BookmarkButton: React.FC<BookmarkButtonProps> = ({
+export const MemoButton: React.FC<MemoButtonProps> = ({
   image,
-  onToggle,
+  onClick,
   size = 'icon',
   variant = 'outline',
   className = '',
   disabled = false,
 }) => {
-  const isBookmarked = image.metadata.bookmarked;
+  const hasMemo = !!image.metadata?.memo;
 
   return (
     <Button
@@ -33,17 +33,17 @@ export const BookmarkButton: React.FC<BookmarkButtonProps> = ({
       onClick={(e) => {
         e.stopPropagation();
         if (!disabled) {
-          onToggle(image.id);
+          onClick(image);
         }
       }}
-      title={isBookmarked ? "Remove bookmark" : "Add bookmark"}
+      title={hasMemo ? "Edit memo" : "Add memo"}
       className={className}
       disabled={disabled}
     >
-      {isBookmarked ? (
-        <BookmarkCheck className="h-4 w-4 fill-orange-500 stroke-none" />
+      {hasMemo ? (
+        <Pencil className="h-4 w-4 fill-black stroke-none" />
       ) : (
-        <Bookmark className="h-4 w-4" />
+        <Pencil className="h-4 w-4" />
       )}
     </Button>
   );
