@@ -1439,9 +1439,16 @@ function App() {
                     inputMode="numeric"
                     value={batchCount}
                     onChange={(e) => {
-                      const value = e.target.value;
-                      // Allow empty string or numeric values
-                      if (value === '' || /^\d+$/.test(value)) {
+                      let value = e.target.value;
+                      // Convert full-width numbers to half-width
+                      const fullToHalf = (str: string) => {
+                        return str.replace(/[０-９]/g, (char) => {
+                          return String.fromCharCode(char.charCodeAt(0) - 0xFEE0);
+                        });
+                      };
+                      value = fullToHalf(value);
+                      // Allow empty string or numeric values greater than 0
+                      if (value === '' || (/^\d+$/.test(value) && parseInt(value, 10) > 0)) {
                         setBatchCount(value);
                       }
                     }}
@@ -1534,7 +1541,7 @@ function App() {
             )}
             {history.length === 0 && (
               <div className="w-full flex items-center justify-center text-muted-foreground py-12">
-                <p className="text-sm uppercase tracking-wider">
+                <p className="text-sm tracking-wider">
                   No images generated yet
                 </p>
               </div>
