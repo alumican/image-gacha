@@ -1202,7 +1202,10 @@ function App() {
         <header className="mb-12 border-b pb-8">
           <div className="flex flex-col md:flex-row md:items-end gap-8">
                 <div className="flex flex-col">
-                  <h1 className="text-4xl font-bold tracking-tight mb-2">
+                  <h1 
+                    className="text-4xl font-bold tracking-tight mb-2 cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => window.location.reload()}
+                  >
                     Image Gacha
                   </h1>
                   <p className="text-sm text-muted-foreground">
@@ -1266,7 +1269,7 @@ function App() {
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar / Controls */}
-          <aside className="w-full lg:w-[380px] lg:flex-shrink-0 space-y-6">
+          <aside className="w-full lg:w-[380px] lg:flex-shrink-0 space-y-4">
             <ParameterCard
               number="01"
               title="PROMPT"
@@ -1530,31 +1533,11 @@ function App() {
               </div>
             )}
             {history.length === 0 && (
-              viewMode === 'large' ? (
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="w-full max-h-[500px] flex flex-col items-center justify-center text-muted-foreground min-h-[300px] border rounded-lg">
-                      <p className="text-sm uppercase tracking-wider">
-                        No images generated yet
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ) : viewMode === 'list' ? (
-                <div className="w-full flex items-center justify-center text-muted-foreground py-12">
-                  <p className="text-sm uppercase tracking-wider">
-                    No images generated yet
-                  </p>
-                </div>
-              ) : (
-                <div className="flex flex-wrap gap-4">
-                  <div className="w-[200px] h-[200px] rounded-lg border overflow-hidden bg-muted flex items-center justify-center flex-shrink-0">
-                    <p className="text-xs uppercase tracking-wider text-muted-foreground">
-                      No images
-                    </p>
-                  </div>
-                </div>
-              )
+              <div className="w-full flex items-center justify-center text-muted-foreground py-12">
+                <p className="text-sm uppercase tracking-wider">
+                  No images generated yet
+                </p>
+              </div>
             )}
 
             <div className="flex flex-wrap gap-4">
@@ -1567,7 +1550,7 @@ function App() {
                 .map((item, idx) => (
                 viewMode === 'large' ? (
                   <Card key={item.id} className="w-full max-w-2xl">
-                    <CardContent className="pt-6">
+                    <CardContent className="p-4">
                       <div className="space-y-4">
                         <div className="relative group">
                           <div className="w-full max-h-[500px] flex items-center justify-center bg-muted rounded-lg border overflow-hidden min-h-[300px]"
